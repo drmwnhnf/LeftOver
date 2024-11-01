@@ -38,3 +38,13 @@
   - Git for version control
   - Docker
   - JWT for authentication
+
+## Contributing
+
+- Darmawan Hanif
+- Stefanus Simon Rilando
+- Muhammad Sesarafli Aljagra
+
+## Special Thanks
+
+- Prof. Dr. Ir. Riri Fitri Sari, M.M., MSc. as our lecturer
