@@ -1,0 +1,78 @@
+/* frontend/src/pages/AuthPage.css */
+
+.auth-container {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  height: 100vh;
+  background: linear-gradient(to right, #8DC26F, #CCE35A);
+}
+
+.auth-box {
+  background-color: #ffffff;
+  padding: 2rem;
+  border-radius: 12px;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+  text-align: center;
+  width: 320px;
+}
+
+.auth-box h2 {
+  font-size: 1.5rem;
+  color: #2C713E;
+  margin-bottom: 1.5rem;
+  font-weight: bold;
+}
+
+.input-group {
+  display: flex;
+  align-items: center;
+  margin-bottom: 1rem;
+  background-color: #f0f0f0;
+  padding: 0.5rem;
+  border-radius: 8px;
+}
+
+.input-group .icon {
+  color: #2C713E;
+  margin-right: 0.5rem;
+}
+
+.input-group input {
+  border: none;
+  outline: none;
+  background: transparent;
+  flex: 1;
+}
+
+.auth-button {
+  width: 100%;
+  background-color: #2C713E;
+  color: #fff;
+  padding: 0.75rem;
+  border: none;
+  border-radius: 8px;
+  font-weight: bold;
+  font-size: 1rem;
+  cursor: pointer;
+  transition: background-color 0.3s ease;
+}
+
+.auth-button:hover {
+  background-color: #225a2e;
+}
+
+.auth-box p {
+  margin-top: 1rem;
+  font-size: 0.9rem;
+}
+
+.auth-box p a {
+  color: #2C713E;
+  font-weight: bold;
+  text-decoration: none;
+}
+
+.auth-box p a:hover {
+  text-decoration: underline;
+}
