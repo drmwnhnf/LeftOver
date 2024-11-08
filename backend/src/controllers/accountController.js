@@ -1,11 +1,10 @@
-const { pool } = require('../config/dbconfig');
+const { pool } = require('../configs/dbconfig');
 const { hashThis } = require('../tools/hasher');
 const logger = require('../tools/logger');
 
 function validateEmail(input) {
-    var validRegex = /^[a-zA-Z0-9.!#$%&'*+/=?^_`{|}~-]+@[a-zA-Z0-9-]+(?:\.[a-zA-Z0-9-]+)*$/;
-    if (input.match(validRegex)) return true;
-    return false;
+    const validRegex = /^[a-zA-Z0-9.!#$%&'*+/=?^_`{|}~-]+@[a-zA-Z0-9-]+(?:\.[a-zA-Z0-9-]+)*$/;
+    return validRegex.test(input);
 }
 
 async function login(req, res) {
@@ -45,7 +44,7 @@ async function login(req, res) {
 }
 
 async function register(req, res) {
-    const { username, email, password, fullname } = req.body;
+    const { email, username, password, fullname } = req.body;
     if (!validateEmail(email)) {
         res.status(200).json({
             success: false,
@@ -91,6 +90,8 @@ async function register(req, res) {
         });
     }
 }
+
+
 
 module.exports = {
     login,
