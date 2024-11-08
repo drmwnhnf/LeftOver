@@ -21,7 +21,7 @@ CREATE TABLE Item (
     imagelink TEXT
 );
 
-CREATE TABLE Order (
+CREATE TABLE "order" (
     orderId UUID PRIMARY KEY DEFAULT gen_random_uuid(),
     itemId UUID NOT NULL,
     sellerId UUID NOT NULL,
@@ -33,3 +33,9 @@ CREATE TABLE Order (
 );
 
 CREATE TYPE orderstatus AS ENUM ('WAITING', 'PAID', 'CANCELED', 'DONE');
+
+CREATE TABLE payment (
+    paymentId UUID PRIMARY KEY DEFAULT gen_random_uuid(),
+    orderId UUID NOT NULL,
+    total NUMERIC(15, 2) NOT NULL
+);
