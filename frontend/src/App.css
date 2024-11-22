@@ -1,34 +1,30 @@
-/* App.css */
+/* index.css */
 
-/* Apply a global box-sizing rule */
+/* Reset margin and padding for all elements */
 *,
 *::before,
 *::after {
-  box-sizing: border-box;
   margin: 0;
   padding: 0;
+  box-sizing: border-box;
 }
 
-/* General styling for body */
+/* Basic styling for body */
 body {
-  font-family: Arial, sans-serif;
+  font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+  background-color: #e6f7e6; /* Soft light green */
   color: #333;
-  background-color: #f0f8f5; /* Light greenish background */
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  height: 100vh;
-  margin: 0;
+  line-height: 1.6;
 }
 
-/* Center the main app */
-.App {
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  padding: 2rem;
-  width: 100%;
-  max-width: 1200px;
+/* Links */
+a {
+  color: #4caf50;
+  text-decoration: none;
 }
 
-/* Additional global styles can go here if needed */
+a:hover {
+  text-decoration: underline;
+}
+
+/* Add any other global resets or styles here */

@@ -5,11 +5,11 @@ import "./HomePage.css";
 
 const HomePage = () => {
   const [items, setItems] = useState([
-    { id: 1, name: "Sample Item 1" },
-    { id: 2, name: "Sample Item 2" },
+    { id: 1, name: "Sample Item 1", price: "$5.00"},
+    { id: 2, name: "Sample Item 2", price: "$7.00"},
   ]);
 
-  const [newItem, setNewItem] = useState("");
+  //const [newItem, setNewItem] = useState("");
 
   useEffect(() => {
     loadItems();
@@ -37,29 +37,42 @@ const HomePage = () => {
   };
 
   return (
-    <div className="container">
-      <h2>Home Page</h2>
-      <div className="input-section">
+    <div className="homepage">
+      <header className="header">
         <input
-          value={newItem}
-          onChange={(e) => setNewItem(e.target.value)}
-          placeholder="New item"
+          className="search-bar"
+          placeholder="What do you want to eat today?"
           type="text"
         />
-        <button onClick={handleCreate}>Add Item</button>
-      </div>
-      <ul className="item-list">
+        <div className="icons">
+          <i className="icon upload-icon"></i>
+          <i className="icon cart-icon"></i>
+          <i className="icon user-icon"></i>
+        </div>
+      </header>
+
+      <section className="featured-item">
+        <img
+          src="featured-image.jpg"
+          alt="Featured Item"
+          className="featured-image"
+        />
+        <div className="featured-overlay">
+          <h2 className="featured-title">FEATURED ITEM TITLE</h2>
+          <span className="featured-price">$7.89</span>
+        </div>
+      </section>
+
+      <section className="items-section">
         {items.map((item) => (
-          <li key={item.id} className="item">
-            <input
-              value={item.name}
-              onChange={(e) => handleUpdate(item.id, e.target.value)}
-              type="text"
-            />
-            <button onClick={() => handleDelete(item.id)}>Delete</button>
-          </li>
+          <div key={item.id} className="item-card">
+            <img src={item.image} alt={item.name} className="item-image" />
+            <h3 className="item-name">{item.name}</h3>
+            <p className="item-price">{item.price}</p>
+            <span className="item-seller">Seller</span>
+          </div>
         ))}
-      </ul>
+      </section>
     </div>
   );
 };

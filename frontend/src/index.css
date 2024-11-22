@@ -11,12 +11,11 @@
 
 /* Basic styling for body */
 body {
-  font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-  background-color: #e6f7e6; /* Soft light green */
-  color: #333;
-  line-height: 1.6;
+  margin: 0;
+  padding: 0;
+  background-color: #e6f7e6; /* Atur background sesuai preferensi */
 }
-
+/*  */
 /* Links */
 a {
   color: #4caf50;
