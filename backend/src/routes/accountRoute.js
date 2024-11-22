@@ -8,5 +8,6 @@ const router = express.Router();
 router.post('/login', accountController.login);
 // Register POST '/register'
 router.post('/register', accountController.register);
+// Edit account PUT '/'
 
 module.exports = router;

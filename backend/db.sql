@@ -6,8 +6,7 @@ CREATE TABLE Account (
     password TEXT NOT NULL,
     email TEXT UNIQUE NOT NULL,
     fullName TEXT NOT NULL,
-    location TEXT,
-    balance NUMERIC(15, 2) DEFAULT 0.00
+    location TEXT
 );
 
 CREATE TABLE Item (
@@ -34,8 +33,8 @@ CREATE TABLE "order" (
 
 CREATE TYPE orderstatus AS ENUM ('WAITING', 'PAID', 'CANCELED', 'DONE');
 
-CREATE TABLE payment (
-    paymentId UUID PRIMARY KEY DEFAULT gen_random_uuid(),
-    orderId UUID NOT NULL,
-    total NUMERIC(15, 2) NOT NULL
+CREATE TABLE "chat" (
+    chatId UUID PRIMARY KEY DEFAULT gen_random_uuid(),
+    senderId UUID NOT NULL,
+    
 );

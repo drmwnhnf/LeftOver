@@ -91,7 +91,41 @@ async function register(req, res) {
     }
 }
 
-
+async function editAccount(req, res) {
+    const { email, password } = req.body;
+    const hashedPassword = hashThis(password);
+    try {
+        // Check for account
+        const queryResult = await pool.query(
+            "SELECT * FROM account WHERE email = $1 AND password = $2",
+            [email, hashedPassword]
+        );
+        // If found, send the account data
+        // else send nothing
+        if (queryResult.rowCount != 0) {
+            res.status(200).json({
+                success: true,
+                message: "Login Success!",
+                data: queryResult.rows[0]
+            });
+        }
+        else {
+            res.status(200).json({
+                success: false,
+                message: "Login Failed! Wrong email or password!",
+                data: null
+            });
+        }
+    }
+    catch (error) {
+        logger.error(error);
+        res.status(500).json({
+            success: false,
+            message: "Internal Server Error",
+            data: null
+        });
+    }
+}
 
 module.exports = {
     login,
