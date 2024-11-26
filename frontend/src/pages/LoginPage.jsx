@@ -6,8 +6,8 @@ import { Link } from "react-router-dom";
 import { FaUserAlt, FaLock } from "react-icons/fa";
 
 const LoginPage = () => {
-  const [username, setUsername] = useState("");
-  const [password, setPassword] = useState("");
+  // const [username, setUsername] = useState("");
+  // const [password, setPassword] = useState("");
 
   const handleLogin = async (e) => {
     e.preventDefault();

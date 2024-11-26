@@ -6,9 +6,9 @@ import { Link } from "react-router-dom";
 import { FaUserAlt, FaLock, FaEnvelope } from "react-icons/fa";
 
 const RegisterPage = () => {
-  const [username, setUsername] = useState("");
-  const [email, setEmail] = useState("");
-  const [password, setPassword] = useState("");
+  // const [username, setUsername] = useState("");
+  // const [email, setEmail] = useState("");
+  // const [password, setPassword] = useState("");
 
   const handleRegister = async (e) => {
     e.preventDefault();

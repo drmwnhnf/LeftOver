@@ -8,7 +8,10 @@ const accountRoute = require('./src/routes/accountRoute');
 
 const app = express();
 
-app.use(bodyParser);
+app.use(bodyParser.urlencoded({
+    extended: true
+}));
+app.use(bodyParser.json());
 app.use(loggingMiddleware);
 
 app.use('/account', accountRoute);

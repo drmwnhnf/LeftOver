@@ -4,12 +4,8 @@ import { fetchItems, createItem, updateItem, deleteItem } from "../api";
 import "./HomePage.css";
 
 const HomePage = () => {
-  const [items, setItems] = useState([
-    { id: 1, name: "Sample Item 1", price: "$5.00"},
-    { id: 2, name: "Sample Item 2", price: "$7.00"},
-  ]);
-
-  //const [newItem, setNewItem] = useState("");
+  
+  // const [newItem, setNewItem] = useState("");
 
   useEffect(() => {
     loadItems();
@@ -37,35 +33,91 @@ const HomePage = () => {
   };
 
   return (
-    <div className="homepage">
+    <div className="container">
       <header className="header">
         <input
-          className="search-bar"
-          placeholder="What do you want to eat today?"
           type="text"
+          placeholder="What do you want to eat today?"
+          className="search-bar"
         />
         <div className="icons">
-          <i className="icon upload-icon"></i>
-          <i className="icon cart-icon"></i>
-          <i className="icon user-icon"></i>
+          <button className="icon">🔼</button>
+          <button className="icon">🛒</button>
+          <button className="icon">👤</button>
         </div>
       </header>
-      <section className="featured-item">
-      
-      </section>
-      <section className="items-section">
-        {items.map((item) => (
-          <div key={item.id} className="item-card">
-            <img src="https://i.ibb.co.com/82mgvjg/download.jpg" alt="Sayur Kol" className="item-image" />
-            <h3 className="item-name">Sayur Kol</h3>
-            <p className="item-price">{item.price}</p>
-            <span className="item-seller">Toko Barokah Sederhana</span>
+
+      <main className="main">
+        <div className="featured-section">
+          <div className="featured-item">
+            <img
+              src="https://via.placeholder.com/400x300"
+              alt="Featured Item"
+              className="featured-image"
+            />
+            <div className="featured-text">
+              <h2>FEATURED ITEM TITLE</h2>
+              <p className="featured-price">RpItem Price</p>
+              <p className="featured-label">Featured on LeftOver</p>
+            </div>
           </div>
-        ))}
-      </section>
+          <button className="arrow-button">&lt;</button>
+          <button className="arrow-button">&gt;</button>
+        </div>
+
+        <div className="items-grid">
+          <div className="item-card">
+            <img
+              src="https://via.placeholder.com/150"
+              alt="Item"
+              className="item-image"
+            />
+            <div className="item-info">
+              <h3>Item Title</h3>
+              <p>RpItem Price</p>
+              <p>Seller</p>
+            </div>
+          </div>
+          <div className="item-card">
+            <img
+              src="https://via.placeholder.com/150"
+              alt="Item"
+              className="item-image"
+            />
+            <div className="item-info">
+              <h3>Item Title</h3>
+              <p>RpItem Price</p>
+              <p>Seller</p>
+            </div>
+          </div>
+          <div className="item-card">
+            <img
+              src="https://via.placeholder.com/150"
+              alt="Item"
+              className="item-image"
+            />
+            <div className="item-info">
+              <h3>Item Title</h3>
+              <p>RpItem Price</p>
+              <p>Seller</p>
+            </div>
+          </div>
+          <div className="item-card">
+            <img
+              src="https://via.placeholder.com/150"
+              alt="Item"
+              className="item-image"
+            />
+            <div className="item-info">
+              <h3>Item Title</h3>
+              <p>RpItem Price</p>
+              <p>Seller</p>
+            </div>
+          </div>
+        </div>
+      </main>
     </div>
   );
-  
 };
 
 export default HomePage;
