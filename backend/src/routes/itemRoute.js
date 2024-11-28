@@ -4,7 +4,9 @@ const router = express.Router();
 
 // Route untuk '/item'
 
-// Get Item by Search '/search'
+// Get Item by Id '/:itemId'
+router.get('/:itemId', itemController.getItembyId);
+// Search Item '/search'
 router.post('/search', itemController.searchItem);
 // Post an Item POST '/upload'
 router.post('/create', itemController.createItem);

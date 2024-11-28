@@ -5,6 +5,7 @@ const loggingMiddleware = require('./src/middlewares/loggingMiddleware');
 const { databaseConnectionTest } = require('./src/configs/dbconfig');
 
 const accountRoute = require('./src/routes/accountRoute');
+const itemRoute = require('./src/routes/itemRoute');
 
 const app = express();
 
@@ -15,6 +16,7 @@ app.use(bodyParser.json());
 app.use(loggingMiddleware);
 
 app.use('/account', accountRoute);
+app.use('/item', itemRoute);
 
 databaseConnectionTest();
 
