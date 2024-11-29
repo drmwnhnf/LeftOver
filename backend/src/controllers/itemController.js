@@ -129,10 +129,6 @@ async function deleteItem(req, res) {
                 "DELETE FROM itemcategories WHERE itemid = $1",
                 [itemId]
             );
-            await pool.query(
-                "DELETE FROM order WHERE itemid = $1",
-                [itemId]
-            );
             res.status(200).json({
                 success: true,
                 message: "Delete success!",
