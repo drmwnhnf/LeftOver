@@ -1,27 +1,28 @@
-import axios from 'axios';
+import axios from "axios";
+import React from "react";
 import "./AccountPage.css";
 
 const AccountPage = () => {
-//   const [username, setUsername] = useState("");
-//   const [email, setEmail] = useState("");
-//   const [password, setPassword] = useState("");
+  // const [username, setUsername] = useState("");
+  // const [email, setEmail] = useState("");
+  // const [password, setPassword] = useState("");
 
-  const handleUpdate = async (e) => {
-    e.preventDefault();
-    try {
-      const response = await axios.put("/api/account", {
-        username,
-        email,
-        password,
-      });
-      console.log("Account updated:", response.data);
-    } catch (error) {
-      console.error("Error updating account:", error);
-    }
-  };
+  // const handleUpdate = async (e) => {
+  //   e.preventDefault();
+  //   try {
+  //     const response = await axios.put("/api/account", {
+  //       username,
+  //       email,
+  //       password,
+  //     });
+  //     console.log("Account updated:", response.data);
+  //   } catch (error) {
+  //     console.error("Error updating account:", error);
+  //   }
+  // };
 
   return (
-    <div className="profile-container">
+    <div className="container">
       <header className="header">
         <input
           type="text"

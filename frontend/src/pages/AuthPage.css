@@ -1,78 +1,93 @@
-/* frontend/src/pages/AuthPage.css */
+html, body {
+  margin: 0;
+  padding: 0;
+  height: 100%;
+  width: 100%;
+  background: linear-gradient(to right, #00712D, #D5ED9F, #FFFFFF);
+}
 
-.auth-container {
+.verify-container {
   display: flex;
   align-items: center;
   justify-content: center;
-  height: 100vh;
-  background: linear-gradient(to right, #8DC26F, #CCE35A);
+  min-height: 100vh; /* Ubah dari height ke min-height */
+  width: 100vw; /* Tambahkan lebar full viewport */
+  margin: 0;
+  padding: 0;
+  background: linear-gradient(to right, #00712D, #D5ED9F, #FFFFFF);
+  position: fixed; /* Tambahkan ini untuk memastikan full screen */
+  top: 0;
+  left: 0;
 }
 
-.auth-box {
-  background-color: #ffffff;
-  padding: 2rem;
-  border-radius: 12px;
-  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+.verify-card {
+  background: white;
+  border-radius: 15px;
+  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.2);
   text-align: center;
-  width: 320px;
+  align-content: center;
+  padding: 2rem;
+  width: 300px;
 }
 
-.auth-box h2 {
+.logo {
+  color: #2d802d;
   font-size: 1.5rem;
-  color: #2C713E;
-  margin-bottom: 1.5rem;
   font-weight: bold;
-}
-
-.input-group {
-  display: flex;
-  align-items: center;
   margin-bottom: 1rem;
-  background-color: #f0f0f0;
-  padding: 0.5rem;
+}
+
+h2 {
+  color: #000;
+  font-size: 1.2rem;
+  margin-bottom: 0.5rem;
+}
+
+p {
+  color: #666;
+  font-size: 0.9rem;
+  margin-bottom: 1.5rem;
+}
+
+.code-input {
+  align-content: center;
+  width: 80%;
+  padding: 0.8rem;
+  border: 1px solid #ccc;
   border-radius: 8px;
+  font-size: 1rem;
+  margin-bottom: 1rem;
 }
 
-.input-group .icon {
-  color: #2C713E;
-  margin-right: 0.5rem;
+.code-input::placeholder {
+  color: #aaa;
 }
 
-.input-group input {
-  border: none;
-  outline: none;
-  background: transparent;
-  flex: 1;
-}
-
-.auth-button {
+.verify-button {
   width: 100%;
-  background-color: #2C713E;
-  color: #fff;
-  padding: 0.75rem;
+  padding: 0.8rem;
+  background-color: #2d802d;
+  color: white;
   border: none;
   border-radius: 8px;
-  font-weight: bold;
   font-size: 1rem;
   cursor: pointer;
   transition: background-color 0.3s ease;
 }
 
-.auth-button:hover {
-  background-color: #225a2e;
+.verify-button:hover {
+  background-color: #256725;
 }
 
-.auth-box p {
+.message {
   margin-top: 1rem;
   font-size: 0.9rem;
 }
 
-.auth-box p a {
-  color: #2C713E;
-  font-weight: bold;
-  text-decoration: none;
+.message.success {
+  color: green;
 }
 
-.auth-box p a:hover {
-  text-decoration: underline;
+.message.error {
+  color: red;
 }

@@ -16,7 +16,6 @@ BEGIN
 END;
 $$ LANGUAGE plpgsql;
 
-
 -- verification table
 CREATE TABLE "verification" (
     accountId UUID UNIQUE NOT NULL,
@@ -40,16 +39,55 @@ CREATE TABLE "account" (
     createdAt TIMESTAMP DEFAULT CURRENT_TIMESTAMP
 );
 
+-- ENUM for product category (updated with capitalized names)
+CREATE TYPE ITEM_CATEGORY AS ENUM (
+    'FRUITS',       -- Buah-buahan
+    'VEGETABLES',   -- Sayuran
+    'BEEF',         -- Sapi
+    'POULTRIES',    -- Ayam dan unggas lainnya
+    'PORK',         -- Babi
+    'SEAFOOD',      -- Produk laut
+    'LAMB',         -- Domba atau kambing
+    'MILKS',        -- Susu
+    'PLANT_PROTEINS',
+    'OTHER_ANIMAL_PRODUCTS',
+    'OTHER_PLANT_PRODUCTS',
+    'STAPLES',      -- Bahan makanan pokok
+    'PROCESSED',    -- Produk olahan
+    'BEVERAGES',    -- Minuman
+    'SEASONINGS',   -- Bumbu dapur
+    'SNACKS'        -- Cemilan
+);
+
+-- ENUM untuk kondisi produk
+CREATE TYPE ITEM_CONDITION AS ENUM (
+    'FRESH',
+    'NEAR_EXPIRED',
+    'OPENED',
+    'LEFTOVER'
+);
+
 -- item table
 CREATE TABLE "item" (
     itemId UUID PRIMARY KEY DEFAULT gen_random_uuid(),
     sellerId UUID NOT NULL,
     name TEXT NOT NULL,
     price NUMERIC(15, 0) NOT NULL,
+    amount NUMERIC(4, 0) NOT NULL,
     expirationDate DATE NOT NULL,
     imageURL TEXT NOT NULL,
     description TEXT,
     uploadedAt TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+);
+
+CREATE TABLE "itemcategories" (
+    itemId UUID NOT NULL,
+    category ITEM_CATEGORY NOT NULL
+);
+
+CREATE TABLE "itemconditions" (
+    itemId UUID NOT NULL,
+    itemCondition ITEM_CONDITION NOT NULL
 );
 
 -- orderStatus enum
@@ -79,7 +117,7 @@ CREATE TABLE "order" (
     itemId UUID NOT NULL,
     sellerId UUID NOT NULL,
     buyerId UUID NOT NULL,
-    itemAmmount NUMERIC(4, 0) NOT NULL,
+    itemAmount NUMERIC(4, 0) NOT NULL,
     totalPrice NUMERIC(15, 0) NOT NULL,
     status orderStatus DEFAULT 'WAITING',
     orderCode TEXT DEFAULT gen_order_code(),
@@ -117,3 +155,4 @@ CREATE TABLE "chat" (
     isRead BOOLEAN DEFAULT FALSE,
     sentAt TIMESTAMP DEFAULT CURRENT_TIMESTAMP
 );
+
