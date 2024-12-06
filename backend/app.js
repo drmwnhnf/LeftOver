@@ -13,7 +13,11 @@ const chatRoute = require('./src/routes/chatRoute');
 
 const app = express();
 
-app.use(cors());
+app.use(cors({
+    origin:'https://frontend-seven-pi-48.vercel.app/',
+    methods: ['GET','POST','PUT','DELETE'],
+    credentials: true
+}));
 app.use(bodyParser.urlencoded({
     extended: true
 }));
