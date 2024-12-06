@@ -33,7 +33,7 @@ const SellerItem = () => {
     setIsLoading(true);
     try {
       const response = await axios.get(
-        `http://localhost:8000/item/seller/${accountId}`
+        `https://backend-beta-beryl.vercel.app/item/seller/${accountId}`
       );
       if (response.data.success) {
         setItems(response.data.data);
@@ -58,7 +58,7 @@ const SellerItem = () => {
   const handleAddItemSubmit = async (e) => {
     e.preventDefault();
     try {
-      const response = await axios.post("http://localhost:8000/item/create", {
+      const response = await axios.post("https://backend-beta-beryl.vercel.app/item/create", {
         ...newItem,
         sellerid: accountId,
       });
@@ -81,7 +81,7 @@ const SellerItem = () => {
     if (confirm) {
       try {
         const response = await axios.delete(
-          `http://localhost:8000/item/delete/${itemId}`
+          `https://backend-beta-beryl.vercel.app/item/delete/${itemId}`
         );
         if (response.data.success) {
           alert("Item deleted successfully!");
@@ -243,7 +243,7 @@ const SellerItem = () => {
     e.preventDefault();
     try {
       const response = await axios.put(
-        `http://localhost:8000/item/edit/${editItem.itemid}`,
+        `https://backend-beta-beryl.vercel.app/item/edit/${editItem.itemid}`,
         editItem
       );
       if (response.data.success) {

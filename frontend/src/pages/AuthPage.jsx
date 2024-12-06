@@ -18,7 +18,7 @@ const VerifyPage = () => {
   const handleVerify = async () => {
     try {
       const response = await fetch(
-        `http://localhost:8000/account/verification/${accountId}`,
+        `https://backend-beta-beryl.vercel.app/account/verification/${accountId}`,
         {
           method: "POST",
           headers: {
@@ -38,7 +38,7 @@ const VerifyPage = () => {
         navigate("/login");
       } else {
         // Jika gagal, minta ulang kode verifikasi
-        await fetch(`http://localhost:8000/account/verification/request`, {
+        await fetch(`https://backend-beta-beryl.vercel.app/account/verification/request`, {
           method: "POST",
           headers: {
             "Content-Type": "application/json",

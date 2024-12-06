@@ -18,7 +18,7 @@ const OrderDetail = () => {
     const fetchOrderDetails = async () => {
       try {
         const orderResponse = await axios.get(
-          `http://localhost:8000/order/id/${orderId}`
+          `https://backend-beta-beryl.vercel.app/order/id/${orderId}`
         );
         if (orderResponse.data.success) {
           const order = orderResponse.data.data;
@@ -27,7 +27,7 @@ const OrderDetail = () => {
 
           // Fetch item details
           const itemResponse = await axios.get(
-            `http://localhost:8000/item/${order.itemid}`
+            `https://backend-beta-beryl.vercel.app/item/${order.itemid}`
           );
           if (itemResponse.data.success) {
             setItemData(itemResponse.data.data);
@@ -50,7 +50,7 @@ const OrderDetail = () => {
   const handleCancelOrder = async () => {
     try {
       const response = await axios.put(
-        `http://localhost:8000/order/cancel/${orderId}`
+        `https://backend-beta-beryl.vercel.app/order/cancel/${orderId}`
       );
       if (response.data.success) {
         alert("Order canceled successfully.");
@@ -67,7 +67,7 @@ const OrderDetail = () => {
   const handleAcceptOrder = async () => {
     try {
       const response = await axios.put(
-        `http://localhost:8000/order/accept/${orderId}`
+        `https://backend-beta-beryl.vercel.app/order/accept/${orderId}`
       );
       if (response.data.success) {
         alert("Order accepted successfully.");
@@ -89,7 +89,7 @@ const OrderDetail = () => {
 
     try {
       const response = await axios.put(
-        `http://localhost:8000/order/finish/${orderId}`,
+        `https://backend-beta-beryl.vercel.app/order/finish/${orderId}`,
         {
           orderCode: orderCodeInput,
         }

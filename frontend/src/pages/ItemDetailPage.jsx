@@ -43,7 +43,7 @@ const ItemDetailPage = () => {
 
         // Fetch item details
         const itemResponse = await axios.get(
-          `http://localhost:8000/item/${itemid}`
+          `https://backend-beta-beryl.vercel.app/item/${itemid}`
         );
 
         console.log("Item Response:", itemResponse.data);
@@ -115,7 +115,7 @@ const ItemDetailPage = () => {
       };
 
       const response = await axios.post(
-        "http://localhost:8000/order/create",
+        "https://backend-beta-beryl.vercel.app/order/create",
         orderPayload
       );
 
@@ -151,7 +151,7 @@ const ItemDetailPage = () => {
 
     try {
       // Kirim permintaan untuk membuat chatroom
-      const response = await axios.post("http://localhost:8000/chat/start", {
+      const response = await axios.post("https://backend-beta-beryl.vercel.app/chat/start", {
         firstAccountId: accountId, // ID akun pembeli
         secondAccountId: itemData.sellerid, // ID akun penjual
       });

@@ -31,3 +31,5 @@ databaseConnectionTest();
 app.listen(8000, () => {
     logger.info("Server is running and listening on port 8000")
 });
+
+export default app;

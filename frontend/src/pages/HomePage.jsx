@@ -37,7 +37,7 @@ const HomePage = () => {
 
   const fetchItems = async () => {
     try {
-      const response = await fetch("http://localhost:8000/item/");
+      const response = await fetch("https://backend-beta-beryl.vercel.app/item/");
       const data = await response.json();
       if (data.success) {
         setAllItems(data.data);

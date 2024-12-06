@@ -10,7 +10,7 @@ function ChatRoom() {
 
   useEffect(() => {
     // Ambil daftar chatroom
-    fetch(`http://localhost:8000/chat/u/${firstId}`)
+    fetch(`https://backend-beta-beryl.vercel.app/chat/u/${firstId}`)
       .then((res) => res.json())
       .then(async (data) => {
         if (data.success) {
@@ -31,7 +31,7 @@ function ChatRoom() {
     const namesMap = {};
     for (const id of userIds) {
       try {
-        const response = await fetch(`http://localhost:8000/account/${id}`);
+        const response = await fetch(`https://backend-beta-beryl.vercel.app/account/${id}`);
         const data = await response.json();
         if (data.success) {
           const { firstname, surname } = data.data;
@@ -48,7 +48,7 @@ function ChatRoom() {
   };
 
   const handleChatRoomClick = (chatroomId) => {
-    fetch(`http://localhost:8000/chat/r/${chatroomId}`)
+    fetch(`https://backend-beta-beryl.vercel.app/chat/r/${chatroomId}`)
       .then((res) => res.json())
       .then((data) => {
         if (data.success) {

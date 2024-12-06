@@ -58,7 +58,7 @@ const SearchPage = () => {
   const fetchItems = async () => {
     setIsLoading(true);
     try {
-      const response = await fetch("http://localhost:8000/item/search", {
+      const response = await fetch("https://backend-beta-beryl.vercel.app/item/search", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({

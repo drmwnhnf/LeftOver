@@ -10,7 +10,7 @@ function Chat() {
 
   useEffect(() => {
     // Ambil bubble chat dari API saat komponen dimuat
-    fetch(`http://localhost:8000/chat/r/${chatroomId}`)
+    fetch(`https://backend-beta-beryl.vercel.app/chat/r/${chatroomId}`)
       .then((res) => {
         if (!res.ok) {
           throw new Error(`HTTP error! status: ${res.status}`);
@@ -34,7 +34,7 @@ function Chat() {
 
     try {
       const response = await fetch(
-        `http://localhost:8000/chat/w/${chatroomId}`,
+        `https://backend-beta-beryl.vercel.app/chat/w/${chatroomId}`,
         {
           method: "POST",
           headers: { "Content-Type": "application/json" },

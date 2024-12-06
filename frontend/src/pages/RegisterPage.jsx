@@ -37,7 +37,7 @@ const RegisterPage = () => {
 
       // Step 1: Kirim data ke endpoint register
       const registerResponse = await axios.post(
-        "http://localhost:8000/account/register",
+        "https://backend-beta-beryl.vercel.app/account/register",
         payload
       );
 
@@ -54,7 +54,7 @@ const RegisterPage = () => {
 
       // Step 2: Kirim permintaan verifikasi
       await axios.post(
-        "http://localhost:8000/account/verification/request", 
+        "https://backend-beta-beryl.vercel.app/account/verification/request", 
         { accountId: data }
       );
 

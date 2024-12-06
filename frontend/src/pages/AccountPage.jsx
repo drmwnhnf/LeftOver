@@ -233,7 +233,7 @@ const AccountPage = () => {
   const fetchUserProfile = async () => {
     try {
       const response = await axios.get(
-        `http://localhost:8000/account/${accountId}`
+        `https://backend-beta-beryl.vercel.app/account/${accountId}`
       );
       if (response.data.success) {
         const profile = response.data.data;
@@ -263,8 +263,8 @@ const AccountPage = () => {
     try {
       const endpoint =
         activeTab === "buy"
-          ? `http://localhost:8000/order/out/${accountId}` // Endpoint untuk order made
-          : `http://localhost:8000/order/in/${accountId}`; // Endpoint untuk incoming order
+          ? `https://backend-beta-beryl.vercel.app/order/out/${accountId}` // Endpoint untuk order made
+          : `https://backend-beta-beryl.vercel.app/order/in/${accountId}`; // Endpoint untuk incoming order
       const response = await axios.get(endpoint);
       if (response.data.success) {
         setOrderHistory(response.data.data || []); // Set array kosong jika tidak ada data
@@ -297,7 +297,7 @@ const AccountPage = () => {
   const handleEditSubmit = async (e) => {
     e.preventDefault();
     try {
-      const response = await axios.put("http://localhost:8000/account/edit", {
+      const response = await axios.put("https://backend-beta-beryl.vercel.app/account/edit", {
         ...editForm,
         accountid: accountId,
       });
@@ -320,7 +320,7 @@ const AccountPage = () => {
     if (confirm) {
       try {
         const response = await axios.delete(
-          "http://localhost:8000/account/delete",
+          "https://backend-beta-beryl.vercel.app/account/delete",
           {
             data: { accountId },
           }

@@ -14,7 +14,7 @@ const LoginPage = () => {
   const handleLogin = async (e) => {
     e.preventDefault();
     try {
-      const response = await axios.post("http://localhost:8000/account/login", {
+      const response = await axios.post("https://backend-beta-beryl.vercel.app/account/login", {
         email,
         password,
       });
@@ -26,7 +26,7 @@ const LoginPage = () => {
         if (data) {
           // Step 2: Kirim permintaan verifikasi
           await axios.post(
-            "http://localhost:8000/account/verification/request", 
+            "https://backend-beta-beryl.vercel.app/account/verification/request", 
             { accountId: data }
           );
           localStorage.setItem("accountid", data); // Simpan accountId

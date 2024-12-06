@@ -38,7 +38,7 @@ const OrderPage = () => {
   const fetchOrders = async (accountId) => {
     try {
       const response = await fetch(
-        `http://localhost:8000/order/out/${accountId}`
+        `https://backend-beta-beryl.vercel.app/order/out/${accountId}`
       );
       const data = await response.json();
       if (data.success) {
