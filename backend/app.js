@@ -24,6 +24,7 @@ app.use(bodyParser.urlencoded({
 app.use(bodyParser.json());
 app.use(loggingMiddleware);
 
+app.get('/', console.log('API Working'));
 app.use('/account', accountRoute);
 app.use('/item', itemRoute);
 app.use('/order', orderRoute);
