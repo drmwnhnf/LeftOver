@@ -1,0 +1,141 @@
+html, body {
+  margin: 0;
+  padding: 0;
+  font-family: 'Inter', Arial, sans-serif;
+  box-sizing: border-box;
+  line-height: 1.5;
+  background: #FFFFFF;
+}
+
+.container {
+  display: flex;
+  flex-direction: column;
+  width: 100%;
+  overflow-x: hidden;
+  min-height: 100vh;
+  background: #FFFFFF;
+}
+
+.header {
+  display: flex;
+  justify-content: space-between;
+  background-color: #228B22;
+  padding: 15px 20px;
+  gap: 10px;
+}
+
+.search-bar {
+  flex-grow: 1;
+  margin: 0 15px;
+  padding: 8px 12px;
+  border-radius: 20px;
+  border: none;
+  font-size: 14px;
+}
+
+.icons {
+  display: flex;
+  gap: 15px;
+}
+
+.icon {
+  font-size: 20px;
+  cursor: pointer;
+  transition: transform 0.2s ease;
+}
+
+.icon:hover {
+  transform: scale(1.1);
+}
+
+.order-history {
+  padding: 20px;
+}
+
+.order-history h2 {
+  margin-bottom: 20px;
+  color: #333;
+}
+
+.order-card {
+  display: flex;
+  flex-direction: column;
+  margin-bottom: 20px;
+  padding: 15px;
+  border: 1px solid #ccc;
+  border-radius: 8px;
+  background-color: #fff;
+  box-shadow: 0px 2px 4px rgba(0, 0, 0, 0.1);
+}
+
+.order-header {
+  display: flex;
+  justify-content: space-between;
+  margin-bottom: 10px;
+}
+
+.store-name {
+  font-weight: bold;
+  color: #333;
+}
+
+.order-date {
+  color: #666;
+}
+
+.order-status {
+  padding: 4px 8px;
+  border-radius: 4px;
+  font-size: 12px;
+  text-transform: capitalize;
+}
+
+.order-status.done {
+  background-color: #d4edda;
+  color: #155724;
+}
+
+.order-status.pending {
+  background-color: #fff3cd;
+  color: #856404;
+}
+
+.order-status.cancel {
+  background-color: #f8d7da;
+  color: #721c24;
+}
+
+.order-details {
+  display: flex;
+  align-items: center;
+  gap: 5px;
+}
+
+.order-image {
+  width: 70px;
+  height: 70px;
+  border-radius: 8px;
+  object-fit: cover;
+}
+
+.order-info {
+  flex: 1;
+}
+
+.product-name {
+  font-weight: bold;
+  color: #333;
+  margin-bottom: 5px;
+}
+
+.product-quantity {
+  color: #666;
+}
+
+.order-total {
+  text-align: right;
+}
+
+.order-total p {
+  margin: 0;
+}

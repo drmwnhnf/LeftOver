@@ -7,16 +7,19 @@ import {
   FaShoppingBasket,
   FaSignOutAlt,
   FaSignInAlt,
+  FaCommentAlt,
+  FaHouseUser,
 } from "react-icons/fa";
 import "./ItemDetailPage.css";
 
 const ItemDetailPage = () => {
-  const [itemData, setItem] = useState(null);
+  const [itemData, setItemData] = useState(null);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
   const [isLoggedIn, setIsLoggedIn] = useState(false);
   const [accountId, setAccountId] = useState(null);
   const { itemid } = useParams(); // Mengambil itemId dari URL
+  const [searchQuery, setSearchQuery] = useState("");
   const navigate = useNavigate();
 
   useEffect(() => {
@@ -25,6 +28,7 @@ const ItemDetailPage = () => {
     if (storedAccountId) {
       setIsLoggedIn(true);
       setAccountId(storedAccountId);
+      console.log("Logged in as accountid:", storedAccountId);
     }
 
     const fetchItemDetails = async () => {
@@ -42,22 +46,23 @@ const ItemDetailPage = () => {
           `http://localhost:8000/item/${itemid}`
         );
 
+        console.log("Item Response:", itemResponse.data);
+
         if (itemResponse.data.success) {
           const itemData = itemResponse.data.data;
-          setItem(itemData);
+          setItemData(itemData);
           console.log("Item Data:", itemData);
         } else {
           setError(itemResponse.data.message);
-          
         }
       } catch (err) {
         setError("Failed to fetch item details");
-        
+
         console.error(err);
         navigate("/");
       }
     };
-    
+
     fetchItemDetails();
   }, [itemid]);
 
@@ -91,20 +96,80 @@ const ItemDetailPage = () => {
     navigate("/login");
   };
 
+  console.log("quantity:", quantity);
+
   // Handler order
-  const handleOrder = () => {
+  const handleCreateOrder = async () => {
     if (!isLoggedIn) {
       alert("Silakan login terlebih dahulu untuk melakukan order");
       navigate("/login");
       return;
     }
-    // Logika order selanjutnya
-    navigate("/order", {
-      state: {
-        item: item,
+
+    try {
+      const orderPayload = {
+        itemid: itemData.itemid,
+        sellerid: itemData.sellerid,
+        buyerid: localStorage.getItem("accountid"),
         quantity: quantity,
-      },
-    });
+      };
+
+      const response = await axios.post(
+        "http://localhost:8000/order/create",
+        orderPayload
+      );
+
+      if (response.data.success) {
+        alert("Order berhasil dibuat!");
+        console.log("Order Data:", response.data.data);
+        navigate("/order");
+      } else {
+        alert(response.data.message || "Gagal membuat order");
+      }
+    } catch (error) {
+      console.error("Error creating order:", error);
+      alert("Terjadi kesalahan saat membuat order. Silakan coba lagi.");
+    }
+  };
+
+  const handleSearch = (e) => {
+    e.preventDefault();
+    if (searchQuery.trim()) {
+      // Simpan query pencarian di localStorage
+      localStorage.setItem("searchQuery", searchQuery);
+      // Navigate ke halaman search
+      navigate("/search");
+    }
+  };
+
+  const handleChatSeller = async () => {
+    if (!isLoggedIn) {
+      alert("Silakan login terlebih dahulu untuk memulai chat dengan penjual.");
+      navigate("/login");
+      return;
+    }
+
+    try {
+      // Kirim permintaan untuk membuat chatroom
+      const response = await axios.post("http://localhost:8000/chat/start", {
+        firstAccountId: accountId, // ID akun pembeli
+        secondAccountId: itemData.sellerid, // ID akun penjual
+      });
+
+      if (response.data.success) {
+        const chatroomId = response.data.data.chatroomid;
+        console.log("Chatroom created:", chatroomId);
+        localStorage.setItem("firstAccountId", accountId);
+        localStorage.setItem("secondAccountId", itemData.sellerid);
+        // Arahkan ke halaman chat
+        navigate(`/chat/${chatroomId}`);
+      } else {
+        alert(response.data.message || "Gagal memulai chat.");
+      }
+    } catch (error) {
+      console.error("Error starting chat:", error);
+      alert("Terjadi kesalahan saat memulai chat. Silakan coba lagi.");
+    }
   };
 
   // Error state
@@ -123,23 +188,33 @@ const ItemDetailPage = () => {
     <div className="container">
       {/* Header dengan navigasi */}
       <div className="header">
-        <input
-          type="text"
-          placeholder="What do you want to eat today?"
-          className="search-bar"
-        />
+        <form
+          onSubmit={handleSearch}
+          style={{ width: "100%", display: "flex", alignItems: "center" }}
+        >
+          <input
+            type="text"
+            placeholder="What do you want to eat today?"
+            className="search-bar"
+            value={searchQuery}
+            onChange={(e) => setSearchQuery(e.target.value)}
+          />
+          <button type="submit" style={{ display: "none" }}>
+            Search
+          </button>
+        </form>
         <div className="icons">
           {isLoggedIn ? (
             <>
-              <button className="icon" onClick={() => handleNavigate("/chat")}>
-                <FaRocketchat />
+              <button className="icon" onClick={() => handleNavigate("/")}>
+                <FaHouseUser />
               </button>
               <button className="icon" onClick={() => handleNavigate("/order")}>
                 <FaShoppingBasket />
               </button>
               <button
                 className="icon"
-                onClick={() => handleNavigate("/profile")}
+                onClick={() => Navigate(`/profile/${accountId}`)}
               >
                 <FaUserCircle />
               </button>
@@ -157,7 +232,7 @@ const ItemDetailPage = () => {
 
       {/* Konten detail item */}
       <div className="content">
-        <div className="location">Location: Jakarta Timur</div>
+        <div className="location"></div>
 
         <div className="main">
           <img
@@ -178,17 +253,24 @@ const ItemDetailPage = () => {
           <div className="purchase">
             <div className="purchase-box">
               <div className="quantity-control">
-                <button onClick={handleDecreaseQuantity}>-</button>
-                <span>{quantity}</span>
-                <button onClick={handleIncreaseQuantity}>+</button>
+                <input
+                  type="number"
+                  value={quantity}
+                  min="1"
+                  max={itemData.amount} // Batas maksimum sesuai stok
+                  onChange={(e) => {
+                    const value = parseInt(e.target.value, 10);
+                    setQuantity(isNaN(value) ? 1 : Math.max(1, value)); // Validasi untuk memastikan nilai minimal 1
+                  }}
+                />
               </div>
-              <div classname="sub-total">
+              <div className="sub-total">
                 Subtotal: Rp {(itemData.price * quantity).toLocaleString()}
               </div>
               <button
                 className="order-button"
-                onClick={handleOrder}
-                disabled={itemData.amount <= quantity}
+                onClick={handleCreateOrder}
+                disabled={itemData.amount < quantity || quantity < 1} // Cek stok dan validasi nilai
               >
                 ORDER
               </button>
@@ -196,7 +278,6 @@ const ItemDetailPage = () => {
           </div>
         </div>
       </div>
-
       <div className="contact">
         <img
           src={itemData.seller_avatar || "https://via.placeholder.com/50"}
@@ -208,7 +289,25 @@ const ItemDetailPage = () => {
             {itemData.firstname + " " + itemData.surname}
           </p>
           <p>Email : {itemData.seller_email}</p>
-          <p>Phone : {"0812345678901"}</p>
+          <p>
+            Address:{" "}
+            {itemData.seller_address +
+              " " +
+              itemData.district +
+              " " +
+              itemData.seller_city +
+              " " +
+              itemData.seller_country || "penjual belum menambahkan alamat"}
+          </p>
+          <p>
+            Phone :{" "}
+            {itemData.seller_phone || "penjual belum menambahkan nomor telepon"}
+          </p>
+        </div>
+        <div className="icons">
+          <div className="icon" onClick={handleChatSeller}>
+            <FaCommentAlt />
+          </div>
         </div>
       </div>
     </div>

@@ -4,14 +4,18 @@ const router = express.Router();
 
 // Route untuk '/order'
 
-// Get Seller Order '/order/:sellerId/in'
-router.post('/order/:sellerId/in', orderController.getSellerOrder);
-// Get Buyer Order '/order/:buyerId/out'
-router.post('/order/:buyerId/out', orderController.getBuyerOrder);
+// Get Order by Id '/id/:orderId'
+router.get('/id/:orderId', orderController.getOrderbyId);
+// Get Seller Order '/in/:sellerId'
+router.get('/in/:sellerId', orderController.getSellerOrder);
+// Get Buyer Order '/out/:buyerId'
+router.get('/out/:buyerId', orderController.getBuyerOrder);
 // Create Order POST '/create'
 router.post('/create', orderController.createOrder);
-// Edit Order PUT '/edit/:orderId'
-router.put('/edit/:orderId', orderController.editOrder);
+// Seller accept Order PUT '/accept/:orderId'
+router.put('/accept/:orderId', orderController.acceptOrder);
+// Customer finish Order PUT '/finish/:orderId'
+router.put('/finish/:orderId', orderController.finishOrder);
 // Cancel Order PUT '/delete/:orderId'
 router.put('/cancel/:orderId', orderController.cancelOrder);
 

@@ -4,6 +4,8 @@ const router = express.Router();
 
 // Route untuk '/item'
 
+// Get All Items '/'
+router.get('/', itemController.getAllItems);
 // Get Item by Id '/:itemId'
 router.get('/:itemId', itemController.getItembyId);
 // Search Item '/search'
@@ -14,7 +16,5 @@ router.post('/create', itemController.createItem);
 router.put('/edit/:itemId', itemController.editItem);
 // Delete Item DELETE '/delete/:itemId'
 router.delete('/delete/:itemId', itemController.deleteItem);
-// Get All Items '/all'
-router.get('/', itemController.getAllItems);
 
 module.exports = router;

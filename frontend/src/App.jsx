@@ -7,17 +7,23 @@ import AccountPage from "./pages/AccountPage";
 import SearchPage from "./pages/SearchPage";
 import AuthPage from "./pages/AuthPage";
 import ItemDetailPage from "./pages/ItemDetailPage";
+import OrderPage from "./pages/OrderPage";
+import ChatRoom from "./pages/ChatRoom";
+import Chat from "./pages/Chat";
 
 const App = () => (
   <Router>
     <Routes>
       <Route path="/login" element={<LoginPage />} />
       <Route path="/register" element={<RegisterPage />} />
-      <Route path="/register/verify" element={<AuthPage />} />
+      <Route path="/register/verify/:accountid" element={<AuthPage />} />
+      <Route path="/chat" element={<ChatRoom />} />
+      <Route path="/chat/:chatroomId" element={<Chat />} />
       <Route path="/" element={<HomePage />} />
-      <Route path="/profile" element={<AccountPage />} />
+      <Route path="/profile/:accountid" element={<AccountPage />} />
       <Route path="/search" element={<SearchPage />} />
       <Route path="/item/:itemid" element={<ItemDetailPage />} />
+      <Route path="/order" element={<OrderPage />} />
     </Routes>
   </Router>
 );

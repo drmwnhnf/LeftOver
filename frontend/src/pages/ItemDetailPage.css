@@ -39,14 +39,13 @@ html, body {
   font-family: 'Inter', Arial, sans-serif;
   box-sizing: border-box;
   line-height: 1.5;
-  background: linear-gradient(to right, #00712D, #D5ED9F, #FFFFFF);
+  background: #FFFFFF;
 }
 
 .container {
   min-width: 100%;
   margin: 0;
   /* padding: 20px; */
-  background: linear-gradient(to right, #00712D, #D5ED9F, #FFFFFF);
   min-height: 100vh;
 }
 
@@ -72,7 +71,6 @@ html, body {
 }
 
 .icon {
-  color: white;
   font-size: 20px;
   cursor: pointer;
 }

@@ -152,7 +152,6 @@ CREATE TABLE "chat" (
     senderId UUID NOT NULL,
     chatContentType contentType NOT NULL,
     chatContent TEXT NOT NULL,
-    isRead BOOLEAN DEFAULT FALSE,
     sentAt TIMESTAMP DEFAULT CURRENT_TIMESTAMP
 );
 

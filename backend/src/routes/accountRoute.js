@@ -5,7 +5,7 @@ const router = express.Router();
 // Route untuk '/account'
 
 // Get account by account id GET '/:accountId'
-router.get('/:accountId', accountController.getAccountbyId);
+router.get('/:accountid', accountController.getAccountbyId);
 // Get account by account username GET '/u/:username'
 router.get('/u/:username', accountController.getAccountbyUsername);
 // Login POST '/login'

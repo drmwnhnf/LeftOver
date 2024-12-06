@@ -44,11 +44,11 @@ async function getAccountbyUsername(req, res) {
 }
 
 async function getAccountbyId(req, res) {
-    const {accountId} = req.params;
+    const {accountid} = req.params;
     try {
         const findQuery = await pool.query(
-            "SELECT * FROM account WHERE accountId = $1",
-            [accountId]
+            "SELECT * FROM account WHERE accountid = $1",
+            [accountid]
         );
         if (findQuery.rowCount != 0) {
             res.status(200).json({
@@ -122,8 +122,8 @@ async function login(req, res) {
 }
 
 async function register(req, res) {
-    const { email, username, password, firstName, surname, country, city, district, address, imageURL } = req.body;
-    if (email.length === 0 || username.length === 0 || password.length === 0 || firstName.length === 0 || surname.length === 0) {
+    const { email, username, password, firstName, surname, country, city, district, address, imageURL, phonenumber } = req.body;
+    if (email.length === 0 || username.length === 0 || password.length === 0 || firstName.length === 0 || surname.length === 0 ) {
         res.status(200).json({
             success: false,
             message: "Register Failed! Data not complete!",
@@ -166,8 +166,8 @@ async function register(req, res) {
         }
         else {
             const registerResult = await pool.query(
-                "INSERT INTO account (email, username, password, firstName, surname, country, city, district, address, imageURL) VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9, $10) RETURNING *",
-                [email, username, hashedPassword, firstName, surname, country, city, district, address, imageURL]
+                "INSERT INTO account (email, username, password, firstName, surname, country, city, district, address, imageURL, phonenumber) VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9, $10, $11) RETURNING *",
+                [email, username, hashedPassword, firstName, surname, country, city, district, address, imageURL, phonenumber]
             );
             res.status(201).json({
                 success: true,
@@ -188,19 +188,29 @@ async function register(req, res) {
 }
 
 async function editAccount(req, res) {
-    const { accountId, firstName, surname, country, city, district, address, imageURL } = req.body;
+    const {
+      firstname,
+      surname,
+      country,
+      city,
+      district,
+      address,
+      imageURL,
+      phonenumber,
+      accountid
+    } = req.body;
     try {
         // Check for account
         const queryResult = await pool.query(
-            "SELECT * FROM account WHERE accountId = $1",
-            [accountId]
+            "SELECT * FROM account WHERE accountid = $1",
+            [accountid]
         );
         // If found, edit the account data
         // else send nothing
         if (queryResult.rowCount != 0) {
             const editQuery = await pool.query(
-                "UPDATE account SET firstName = $1, surname = $2, country = $3, city = $4, district = $5, address = $6, imageURL = $7 WHERE accountId = $8 RETURNING *",
-                [firstName, surname, country, city, district, address, imageURL, accountId]
+                "UPDATE account SET firstname = $1, surname = $2, country = $3, city = $4, district = $5, address = $6, imageURL = $7 , phonenumber = $8 WHERE accountId = $9 RETURNING *",
+                [firstname, surname, country, city, district, address, imageURL, phonenumber, accountid]
             );
             res.status(201).json({
                 success: true,

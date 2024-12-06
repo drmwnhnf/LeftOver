@@ -19,19 +19,37 @@ const LoginPage = () => {
         password,
       });
 
-      const { accountid/*, token*/ } = response.data; // Pastikan server mengembalikan accountId dan token
-      console.log("Login Success", response.data);
+      const { success, message, data } = response.data; // Destructure response data sesuai format backend
+      console.log("Login response:", response.data);
+      console.log("Data:", response.data.data);
+      if (!success) {
+        if (data) {
+          // Step 2: Kirim permintaan verifikasi
+          await axios.post(
+            "http://localhost:8000/account/verification/request", 
+            { accountId: data }
+          );
+          localStorage.setItem("accountid", data); // Simpan accountId
+          console.log("Request verifikasi berhasil");
 
-      // Simpan accountId dan waktu timeout ke localStorage
-      const expirationTime = new Date().getTime() + 60 * 60 * 1000; // 1 jam dari sekarang
-      localStorage.setItem("accountid", accountid);
-      // localStorage.setItem("token", token); // Jika ada token untuk keamanan tambahan
-      localStorage.setItem("expiration", expirationTime);
-
-      navigate("/"); // Redirect ke halaman dashboard setelah login
+          // Step 3: Arahkan ke halaman verifikasi
+          navigate("/register/verify/" + response.data.data);
+          return;
+        }
+ // Redirect ke halaman dashboard setelah login
+      } else {
+        if (data) {
+        // Simpan accountId dan waktu timeout ke localStorage
+        const expirationTime = new Date().getTime() + 60 * 60 * 1000; // 1 jam dari sekarang
+        localStorage.setItem("accountid", data); // Simpan accountId
+        localStorage.setItem("expiration", expirationTime);
+        console.log("id:", localStorage.getItem("accountid"));
+        navigate("/");
+      }
+    }
     } catch (err) {
       console.error("Login failed:", err);
-      setError("Login failed. Please check your credentials.");
+      setError("An unexpected error occurred. Please try again later.");
     }
   };
 

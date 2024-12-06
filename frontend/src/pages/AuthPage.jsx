@@ -9,7 +9,7 @@ const VerifyPage = () => {
   const navigate = useNavigate();
 
   // Ambil accountId dari localStorage
-  const accountId = localStorage.getItem("accountId");
+  const accountId = localStorage.getItem("accountid");
   if (!accountId) {
     navigate("/register");
     return null; // Hentikan render jika tidak ada accountId
@@ -34,8 +34,20 @@ const VerifyPage = () => {
 
       if (data.success) {
         // Hapus accountId dari localStorage setelah verifikasi berhasil
-        localStorage.removeItem("accountId");
+        localStorage.removeItem("accountid");
         navigate("/login");
+      } else {
+        // Jika gagal, minta ulang kode verifikasi
+        await fetch(`http://localhost:8000/account/verification/request`, {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify({ accountId }),
+        });
+        setMessage(
+          "Verification failed. A new code has been sent to your email."
+        );
       }
     } catch (error) {
       setMessage("Something went wrong! Please try again.");
