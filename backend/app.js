@@ -16,7 +16,7 @@ const app = express();
 app.use(cors({
     origin:'https://frontend-seven-pi-48.vercel.app/',
     methods: ['GET','POST','PUT','DELETE'],
-    credentials: true
+    credentials: false
 }));
 app.use(bodyParser.urlencoded({
     extended: true
