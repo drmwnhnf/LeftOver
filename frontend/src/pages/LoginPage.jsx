@@ -3,7 +3,7 @@ import "./BasePage.css"; // Shared styles for login and register pages
 import { Link } from "react-router-dom";
 import axios from "axios";
 import { useNavigate } from "react-router-dom";
-import { FaUserAlt, FaLock } from "react-icons/fa";
+import { FaUserAlt, FaLock, FaMailBulk, FaMailchimp, FaEnvelope } from "react-icons/fa";
 
 const LoginPage = () => {
   const [email, setEmail] = useState("");
@@ -59,7 +59,7 @@ const LoginPage = () => {
         <h2>LeftOver</h2>
         <form onSubmit={handleLogin}>
           <div className="input-group">
-            <FaUserAlt className="icon" />
+            <FaEnvelope className="icon" />
             <input
               type="email"
               placeholder="Email"

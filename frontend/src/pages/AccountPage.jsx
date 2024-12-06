@@ -35,6 +35,191 @@ const AccountPage = () => {
     phonenumber: "",
   });
 
+  const locationData = {
+    countries: [
+      {
+        name: "Indonesia",
+        cities: [
+          {
+            name: "Jakarta",
+            districts: [
+              "Central Jakarta",
+              "West Jakarta",
+              "South Jakarta",
+              "East Jakarta",
+              "North Jakarta",
+            ],
+          },
+          {
+            name: "Surabaya",
+            districts: [
+              "Central Surabaya",
+              "East Surabaya",
+              "South Surabaya",
+              "West Surabaya",
+            ],
+          },
+          {
+            name: "Bandung",
+            districts: [
+              "Cibeunying",
+              "Cicendo",
+              "Coblong",
+              "Lengkong",
+              "Regol",
+            ],
+          },
+          {
+            name: "Medan",
+            districts: [
+              "Medan Baru",
+              "Medan Selayang",
+              "Medan Timur",
+              "Medan Tuntungan",
+            ],
+          },
+          {
+            name: "Yogyakarta",
+            districts: [
+              "Danurejan",
+              "Gondomanan",
+              "Jetis",
+              "Mergangsan",
+              "Umbulharjo",
+            ],
+          },
+          {
+            name: "Denpasar",
+            districts: [
+              "Denpasar Barat",
+              "Denpasar Timur",
+              "Denpasar Selatan",
+              "Denpasar Utara",
+            ],
+          },
+          {
+            name: "Makassar",
+            districts: [
+              "Biringkanaya",
+              "Makassar",
+              "Mariso",
+              "Panakkukang",
+              "Ujung Pandang",
+            ],
+          },
+          {
+            name: "Semarang",
+            districts: [
+              "Banyumanik",
+              "Candisari",
+              "Gajahmungkur",
+              "Pedurungan",
+              "Tembalang",
+            ],
+          },
+          {
+            name: "Palembang",
+            districts: [
+              "Alang-Alang Lebar",
+              "Bukit Kecil",
+              "Ilir Barat",
+              "Ilir Timur",
+              "Sukarami",
+            ],
+          },
+          {
+            name: "Bali",
+            districts: ["Badung", "Bangli", "Gianyar", "Karangasem", "Tabanan"],
+          },
+          {
+            name: "Depok",
+            districts: [
+              "Beji",
+              "Bojong Sari",
+              "Cimanggis",
+              "Cinere",
+              "Pancoran Mas",
+              "Sawangan",
+              "Sukmajaya",
+              "Tapos",
+            ],
+          },
+          {
+            name: "Bogor",
+            districts: [
+              "Bogor Barat",
+              "Bogor Selatan",
+              "Bogor Tengah",
+              "Bogor Timur",
+              "Bogor Utara",
+              "Tanah Sareal",
+            ],
+          },
+          {
+            name: "Lombok",
+            districts: ["Mataram", "Praya", "Selong", "Tanjung", "Gerung"],
+          },
+        ],
+      },
+      {
+        name: "Malaysia",
+        cities: [
+          {
+            name: "Kuala Lumpur",
+            districts: ["Bukit Bintang", "Cheras", "Wangsa Maju"],
+          },
+          {
+            name: "Penang",
+            districts: ["George Town", "Bayan Lepas", "Balik Pulau"],
+          },
+        ],
+      },
+      {
+        name: "Singapore",
+        cities: [
+          {
+            name: "Central Region",
+            districts: ["Bukit Merah", "Geylang", "Marina South"],
+          },
+          {
+            name: "North Region",
+            districts: ["Woodlands", "Sembawang", "Yishun"],
+          },
+        ],
+      },
+    ],
+  };
+
+  const [cities, setCities] = useState([]);
+  const [districts, setDistricts] = useState([]);
+
+  const handleCountryChange = (e) => {
+    const selectedCountry = e.target.value;
+    const country = locationData.countries.find(
+      (c) => c.name === selectedCountry
+    );
+    setEditForm((prev) => ({
+      ...prev,
+      country: selectedCountry,
+      city: "",
+      district: "",
+    }));
+    setCities(country ? country.cities : []);
+    setDistricts([]);
+  };
+
+  const handleCityChange = (e) => {
+    const selectedCity = e.target.value;
+    const city = cities.find((c) => c.name === selectedCity);
+    setEditForm((prev) => ({ ...prev, city: selectedCity, district: "" }));
+    setDistricts(city ? city.districts : []);
+  };
+
+  const handleDistrictChange = (e) => {
+    const selectedDistrict = e.target.value;
+    setEditForm((prev) => ({ ...prev, district: selectedDistrict }));
+  };
+
   useEffect(() => {
     if (!accountId) {
       navigate("/login");
@@ -78,20 +263,22 @@ const AccountPage = () => {
     try {
       const endpoint =
         activeTab === "buy"
-          ? `http://localhost:8000/order/out/${accountId}`
-          : `http://localhost:8000/order/in/${accountId}`;
+          ? `http://localhost:8000/order/out/${accountId}` // Endpoint untuk order made
+          : `http://localhost:8000/order/in/${accountId}`; // Endpoint untuk incoming order
       const response = await axios.get(endpoint);
       if (response.data.success) {
-        setOrderHistory(response.data.data);
+        setOrderHistory(response.data.data || []); // Set array kosong jika tidak ada data
       } else {
-        setOrderHistory([]);
+        setOrderHistory([]); // Jika gagal, set array kosong
       }
     } catch (error) {
       console.error("Error fetching order history:", error);
+      setOrderHistory([]); // Tangani error dengan mengosongkan data
     } finally {
       setIsLoading(false);
     }
   };
+
 
   const handleLogout = () => {
     localStorage.removeItem("accountid");
@@ -230,30 +417,53 @@ const AccountPage = () => {
             </div>
             <div className="form-group">
               <label>Country</label>
-              <input
-                type="text"
+              <select
                 name="country"
                 value={editForm.country}
-                onChange={handleEditChange}
-              />
+                onChange={handleCountryChange}
+                required
+              >
+                <option value="">Select Country</option>
+                {locationData.countries.map((country, index) => (
+                  <option key={index} value={country.name}>
+                    {country.name}
+                  </option>
+                ))}
+              </select>
             </div>
             <div className="form-group">
               <label>City</label>
-              <input
-                type="text"
+              <select
                 name="city"
                 value={editForm.city}
-                onChange={handleEditChange}
-              />
+                onChange={handleCityChange}
+                required
+                disabled={!cities.length}
+              >
+                <option value="">Select City</option>
+                {cities.map((city, index) => (
+                  <option key={index} value={city.name}>
+                    {city.name}
+                  </option>
+                ))}
+              </select>
             </div>
             <div className="form-group">
               <label>District</label>
-              <input
-                type="text"
+              <select
                 name="district"
                 value={editForm.district}
-                onChange={handleEditChange}
-              />
+                onChange={handleDistrictChange}
+                required
+                disabled={!districts.length}
+              >
+                <option value="">Select District</option>
+                {districts.map((district, index) => (
+                  <option key={index} value={district}>
+                    {district}
+                  </option>
+                ))}
+              </select>
             </div>
             <div className="form-group">
               <label>Address</label>
@@ -361,12 +571,16 @@ const AccountPage = () => {
             </h2>
             <p>{userProfile.email}</p>
             <p>{userProfile.phonenumber}</p>
-            <p>{userProfile.address}</p>
+            <p>
+              {userProfile.address}, {userProfile.district}, {userProfile.city},{" "}
+              {userProfile.country}
+            </p>
             <button
               className="account-btn-edit"
               onClick={() => setIsEditModalOpen(true)}
             >
-              <FaEdit /> Edit Profile
+              Edit Profile
+              <FaEdit />
             </button>
             <button
               className="account-btn-delete"
@@ -386,7 +600,7 @@ const AccountPage = () => {
               }`}
               onClick={() => setActiveTab("buy")}
             >
-              Buy Orders
+              Orders Made
             </button>
             <button
               className={`account-filter-btn ${
@@ -394,39 +608,48 @@ const AccountPage = () => {
               }`}
               onClick={() => setActiveTab("sell")}
             >
-              Sell Orders
+              Incoming Orders
+            </button>
+            <button
+              className="account-filter-btn"
+              onClick={() => navigate(`/myitems/${accountId}`)}
+            >
+              My Items
             </button>
           </div>
+
           {isLoading ? (
             <p>Loading...</p>
-          ) : (
+          ) : orderHistory.length > 0 ? (
             <div className="account-order-list">
               {orderHistory.map((order) => (
-                <div key={order.orderid} className="account-order-item">
-                  <div className="account-order-body">
-                    <img
-                      src={order.item_image || "https://via.placeholder.com/80"}
-                      alt={order.item_name || "Item"}
-                      className="account-order-image"
-                    />
-                    <div>
-                      <h3>{order.item_name}</h3>
-                      <p>Quantity: {order.quantity}</p>
-                    </div>
+                <div
+                  key={order.orderid}
+                  className="account-order-item"
+                  onClick={() => navigate(`/orderdetails/${order.orderid}`)}
+                >
+                  <img
+                    src={order.item_image || "https://via.placeholder.com/80"}
+                    alt={order.item_name || "Item"}
+                    className="account-order-image"
+                  />
+                  <div>
+                    <h3>{order.item_name}</h3>
+                    <p>Quantity: {order.quantity}</p>
                   </div>
-                  <div className="account-order-details">
-                    <div className="account-total-price">
-                      Rp {order.totalprice}
-                    </div>
-                    <div
-                      className={`account-status ${order.status.toLowerCase()}`}
-                    >
-                      {order.status}
-                    </div>
+                  <div className="account-total-price">
+                    Rp {order.totalprice.toLocaleString()}
+                  </div>
+                  <div
+                    className={`account-status ${order.status.toLowerCase()}`}
+                  >
+                    {order.status}
                   </div>
                 </div>
               ))}
             </div>
+          ) : (
+            <p>No {activeTab === "buy" ? "orders made" : "incoming orders"}.</p>
           )}
         </div>
         {renderEditModal()}

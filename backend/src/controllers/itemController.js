@@ -54,11 +54,11 @@ async function getAllItems(req, res) {
 
 async function createItem(req, res) {
   const {
-    sellerId,
+    sellerid,
     name,
     price,
     expirationDate,
-    imageURL,
+    imageurl,
     description,
     itemCategory,
     itemCondition,
@@ -68,7 +68,7 @@ async function createItem(req, res) {
     name.length === 0 ||
     price.length === 0 ||
     expirationDate.length === 0 ||
-    imageURL.length === 0 ||
+    imageurl.length === 0 ||
     itemCondition.length === 0 ||
     amount === 0
   ) {
@@ -81,8 +81,8 @@ async function createItem(req, res) {
   }
   try {
     const insertQuery = await pool.query(
-      "INSERT INTO item (sellerId, name, price, expirationDate, imageURL, description, amount) VALUES ($1, $2, $3, $4, $5, $6, $7) RETURNING itemId",
-      [sellerId, name, price, expirationDate, imageURL, description, amount]
+      "INSERT INTO item (sellerid, name, price, expirationDate, imageurl, description, amount) VALUES ($1, $2, $3, $4, $5, $6, $7) RETURNING itemId",
+      [sellerid, name, price, expirationDate, imageurl, description, amount]
     );
     await pool.query(
       "INSERT INTO itemconditions (itemId, itemcondition) VALUES ($1, $2)",
@@ -333,6 +333,28 @@ async function editItem(req, res) {
   }
 }
 
+async function getItemsBySellerId(req, res) {
+  const { sellerId } = req.params;
+  try {
+    const result = await pool.query(
+      "SELECT * FROM item WHERE sellerid = $1",
+      [sellerId]
+    );
+    res.status(200).json({
+      success: true,
+      message: "Get items success!",
+      data: result.rows,
+    });
+  } catch (error) {
+    logger.error(error);
+    res.status(500).json({
+      success: false,
+      message: "Internal Server Error",
+      data: null,
+    });
+  }
+}
+
 module.exports = {
   createItem,
   searchItem,
@@ -340,4 +362,5 @@ module.exports = {
   editItem,
   getItembyId,
   getAllItems,
+  getItemsBySellerId,
 };

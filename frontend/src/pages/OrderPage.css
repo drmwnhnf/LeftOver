@@ -1,141 +1,156 @@
-html, body {
-  margin: 0;
-  padding: 0;
-  font-family: 'Inter', Arial, sans-serif;
-  box-sizing: border-box;
-  line-height: 1.5;
-  background: #FFFFFF;
-}
-
-.container {
-  display: flex;
-  flex-direction: column;
-  width: 100%;
-  overflow-x: hidden;
+/* Order Page Container */
+.orderpage-container {
+  font-family: Arial, sans-serif;
+  background-color: #f8f9fa;
+  padding: 1rem;
   min-height: 100vh;
-  background: #FFFFFF;
 }
 
-.header {
+/* Navbar */
+.orderpage-navbar {
   display: flex;
   justify-content: space-between;
-  background-color: #228B22;
-  padding: 15px 20px;
-  gap: 10px;
+  align-items: center;
+  padding: 0.5rem 1rem;
+  background-color: #28a745;
+  border-radius: 8px;
+  margin-bottom: 1.5rem;
+  color: white;
+}
+
+.navbar-logo {
+  font-size: 1.5rem;
+  font-weight: bold;
 }
 
 .search-bar {
-  flex-grow: 1;
-  margin: 0 15px;
-  padding: 8px 12px;
-  border-radius: 20px;
-  border: none;
-  font-size: 14px;
-}
-
-.icons {
   display: flex;
-  gap: 15px;
+  width: 100%;
+  max-width: 600px;
 }
 
-.icon {
-  font-size: 20px;
+.search-input-field {
+  flex: 1;
+  padding: 0.5rem;
+  border: 1px solid #ddd;
+  border-radius: 4px 0 0 4px;
+  outline: none;
+  font-size: 0.9rem;
+}
+
+.search-submit-button {
+  padding: 0.5rem 1rem;
+  border: none;
+  border-radius: 0 4px 4px 0;
+  background-color: #006f3e;
+  color: white;
   cursor: pointer;
-  transition: transform 0.2s ease;
 }
 
-.icon:hover {
-  transform: scale(1.1);
+.navbar-icons-container {
+  display: flex;
+  gap: 0.5rem;
 }
 
-.order-history {
-  padding: 20px;
+.navbar-icon-button {
+  font-size: 1.5rem;
+  color: white;
+  cursor: pointer;
 }
 
-.order-history h2 {
-  margin-bottom: 20px;
-  color: #333;
+.logout-icon-button {
+  color: #ff6f61;
 }
 
-.order-card {
+/* Order Grid */
+.order-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+  gap: 1rem;
+  margin-top: 1rem;
+}
+
+.order-card-container {
+  display: flex;
+  gap: 1rem;
+  padding: 1rem;
+  border: 1px solid #ddd;
+  border-radius: 8px;
+  background-color: white;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+  transition: transform 0.2s ease-in-out;
+  cursor: pointer;
+}
+
+.order-card-container:hover {
+  transform: translateY(-5px);
+}
+
+.order-card-image {
+  width: 100px;
+  height: 100px;
+  object-fit: cover;
+  border-radius: 8px;
+}
+
+.order-info-container {
   display: flex;
   flex-direction: column;
-  margin-bottom: 20px;
-  padding: 15px;
-  border: 1px solid #ccc;
-  border-radius: 8px;
-  background-color: #fff;
-  box-shadow: 0px 2px 4px rgba(0, 0, 0, 0.1);
-}
-
-.order-header {
-  display: flex;
   justify-content: space-between;
-  margin-bottom: 10px;
 }
 
-.store-name {
+
+.order-product-name {
+  font-size: 1rem;
   font-weight: bold;
-  color: #333;
 }
 
-.order-date {
-  color: #666;
-}
-
+.order-product-quantity,
+.order-total-price,
 .order-status {
-  padding: 4px 8px;
-  border-radius: 4px;
-  font-size: 12px;
-  text-transform: capitalize;
+  font-size: 0.85rem;
+  color: #555;
+}
+
+.order-status.waiting {
+  color: #ffc107;
+}
+
+.order-status.ongoing {
+  color: #007bff;
 }
 
 .order-status.done {
-  background-color: #d4edda;
-  color: #155724;
+  color: #28a745;
 }
 
-.order-status.pending {
-  background-color: #fff3cd;
-  color: #856404;
+.order-status.canceled {
+  color: #dc3545;
 }
 
-.order-status.cancel {
-  background-color: #f8d7da;
-  color: #721c24;
-}
-
-.order-details {
+/* Pagination */
+.pagination-container {
   display: flex;
+  justify-content: center;
   align-items: center;
-  gap: 5px;
+  gap: 0.5rem;
+  margin-top: 1.5rem;
 }
 
-.order-image {
-  width: 70px;
-  height: 70px;
-  border-radius: 8px;
-  object-fit: cover;
+.pagination-button {
+  padding: 0.4rem 1rem;
+  border: none;
+  border-radius: 4px;
+  background-color: #28a745;
+  color: white;
+  cursor: pointer;
 }
 
-.order-info {
-  flex: 1;
+.pagination-button:disabled {
+  background-color: #ccc;
+  cursor: not-allowed;
 }
 
-.product-name {
-  font-weight: bold;
-  color: #333;
-  margin-bottom: 5px;
-}
-
-.product-quantity {
-  color: #666;
-}
-
-.order-total {
-  text-align: right;
-}
-
-.order-total p {
-  margin: 0;
+.page-info {
+  font-size: 0.85rem;
 }

@@ -175,6 +175,7 @@ body {
 .account-btn-edit {
   background-color: #28a745;
   color: white;
+  gap: 5px;
 }
 
 .account-btn-edit:hover {
@@ -184,6 +185,7 @@ body {
 .account-btn-delete {
   background-color: #ff6f61;
   color: white;
+  gap: 5px;
 }
 
 .account-btn-delete:hover {
@@ -199,7 +201,7 @@ body {
 /* Account Order History */
 .account-order-history {
   width: 100%;
-  max-width: 1400px;  /* Membuat lebar kontainer lebih besar */
+  max-width: 100%;  /* Membuat lebar kontainer lebih besar */
   margin-top: 30px;
 }
 

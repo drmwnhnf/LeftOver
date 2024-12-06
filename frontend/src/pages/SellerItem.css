@@ -1,0 +1,224 @@
+/* Global Styles */
+body {
+  margin: 0;
+  font-family: Arial, sans-serif;
+  background-color: #f8f9fa;
+}
+
+/* Seller Container */
+.seller-container {
+  display: flex;
+  flex-direction: column;
+  padding: 20px;
+}
+
+/* Header */
+.seller-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 1.5rem;
+  padding: 0.5rem 1rem;
+  background-color: #28a745;
+  border-radius: 8px;
+  color: white;
+}
+
+.seller-header h1 {
+  margin: 0;
+  font-size: 1.5rem;
+  font-weight: bold;
+}
+
+.seller-add-btn {
+  display: flex;
+  align-items: center;
+  gap: 5px;
+  padding: 0.5rem 1rem;
+  border: none;
+  border-radius: 4px;
+  background-color: #006f3e;
+  color: white;
+  cursor: pointer;
+  font-size: 1rem;
+  transition: background-color 0.2s ease;
+}
+
+.seller-add-btn:hover {
+  background-color: #005732;
+}
+
+.seller-back-btn {
+  padding: 10px 20px;
+  margin-right: 15px;
+  background-color: #007bff;
+  color: white;
+  border: none;
+  border-radius: 5px;
+  font-size: 1rem;
+  cursor: pointer;
+  transition: background-color 0.3s ease;
+}
+
+.seller-back-btn:hover {
+  background-color: #0056b3;
+}
+
+/* Item List */
+.seller-item-list {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 20px;
+}
+
+.seller-item-card {
+  background-color: white;
+  border-radius: 10px;
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+  padding: 15px;
+  width: 100%;
+  max-width: 300px;
+  text-align: center;
+}
+
+.seller-item-image {
+  width: 100%;
+  height: 200px;
+  object-fit: cover;
+  border-radius: 8px;
+  margin-bottom: 10px;
+}
+
+.seller-item-info {
+  margin-bottom: 10px;
+}
+
+.seller-item-info h3 {
+  font-size: 1.2rem;
+  margin: 0;
+}
+
+.seller-item-info p {
+  font-size: 0.9rem;
+  margin: 5px 0;
+}
+
+.seller-item-actions {
+  display: flex;
+  justify-content: center;
+  gap: 10px;
+}
+
+.seller-edit-btn,
+.seller-delete-btn {
+  display: flex;
+  align-items: center;
+  gap: 5px;
+  padding: 8px 15px;
+  border: none;
+  border-radius: 5px;
+  cursor: pointer;
+  transition: background-color 0.2s ease;
+}
+
+.seller-edit-btn {
+  background-color: #ffc107;
+  color: white;
+}
+
+.seller-edit-btn:hover {
+  background-color: #e0a800;
+}
+
+.seller-delete-btn {
+  background-color: #ff6f61;
+  color: white;
+}
+
+.seller-delete-btn:hover {
+  background-color: #e63946;
+}
+
+/* Modal */
+.seller-modal-overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: rgba(0, 0, 0, 0.5);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  z-index: 1000;
+}
+
+.seller-modal-content {
+  background: white;
+  padding: 20px;
+  border-radius: 10px;
+  width: 90%;
+  max-width: 400px;
+  max-height: 70%;
+  overflow-y: auto;
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+}
+
+.seller-modal-content h2 {
+  margin-bottom: 15px;
+  text-align: center;
+  color: #28a745;
+  font-size: 1.2rem;
+}
+
+.seller-form-group {
+  margin-bottom: 15px;
+}
+
+.seller-form-group label {
+  display: block;
+  font-weight: bold;
+  margin-bottom: 5px;
+}
+
+.seller-form-group input,
+.seller-form-group textarea,
+.seller-form-group select {
+  width: 100%;
+  padding: 10px;
+  border: 1px solid #ddd;
+  border-radius: 5px;
+  font-size: 0.9rem;
+}
+
+.seller-modal-actions {
+  display: flex;
+  justify-content: space-between;
+  margin-top: 20px;
+}
+
+.seller-btn-cancel,
+.seller-btn-save {
+  padding: 10px 20px;
+  border: none;
+  border-radius: 5px;
+  cursor: pointer;
+}
+
+.seller-btn-cancel {
+  background-color: #6c757d;
+  color: white;
+}
+
+.seller-btn-save {
+  background-color: #28a745;
+  color: white;
+}
+
+.seller-btn-cancel:hover {
+  background-color: #545b62;
+}
+
+.seller-btn-save:hover {
+  background-color: #1e7a1e;
+}

@@ -16,5 +16,7 @@ router.post('/create', itemController.createItem);
 router.put('/edit/:itemId', itemController.editItem);
 // Delete Item DELETE '/delete/:itemId'
 router.delete('/delete/:itemId', itemController.deleteItem);
+// Get Items by Seller Id '/seller/:sellerId'
+router.get('/seller/:sellerId', itemController.getItemsBySellerId);
 
 module.exports = router;

@@ -10,6 +10,8 @@ import ItemDetailPage from "./pages/ItemDetailPage";
 import OrderPage from "./pages/OrderPage";
 import ChatRoom from "./pages/ChatRoom";
 import Chat from "./pages/Chat";
+import SellerItem from "./pages/SellerItem";
+import OrderDetail from "./pages/OrderDetail";
 
 const App = () => (
   <Router>
@@ -23,7 +25,9 @@ const App = () => (
       <Route path="/profile/:accountid" element={<AccountPage />} />
       <Route path="/search" element={<SearchPage />} />
       <Route path="/item/:itemid" element={<ItemDetailPage />} />
-      <Route path="/order" element={<OrderPage />} />
+      <Route path="/order/:accountid" element={<OrderPage />} />
+      <Route path="/myitems/:accountid" element={<SellerItem />} />
+      <Route path="/orderdetails/:orderId" element={<OrderDetail />} />
     </Routes>
   </Router>
 );

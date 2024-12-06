@@ -154,7 +154,7 @@ async function acceptOrder(req, res) {
     const {orderId} = req.params;
     try {
         const findQuery = await pool.query(
-            "SELECT * FROM order WHERE orderid = $1",
+            "SELECT * FROM order_table WHERE orderid = $1",
             [orderId]
         );
         if (findQuery.rows === 0) {
@@ -182,7 +182,7 @@ async function acceptOrder(req, res) {
             return
         }
         const updateQuery = await pool.query(
-            "UPDATE order SET status = 'ONGOING' WHERE orderid = $1 RETURNING orderId",
+            "UPDATE order_table SET status = 'ONGOING' WHERE orderid = $1 RETURNING orderId",
             [orderId]
         );
         res.status(201).json({
@@ -207,7 +207,7 @@ async function finishOrder(req, res) {
     const {orderCode} = req.body;
     try {
         const findQuery = await pool.query(
-            "SELECT * FROM order WHERE orderid = $1",
+            "SELECT * FROM order_table WHERE orderid = $1",
             [orderId]
         );
         if (findQuery.rows === 0) {
@@ -251,7 +251,7 @@ async function finishOrder(req, res) {
             return
         }
         const updateQuery = await pool.query(
-            "UPDATE order SET status = 'DONE' WHERE orderid = $1 RETURNING orderId",
+            "UPDATE order_table SET status = 'DONE' WHERE orderid = $1 RETURNING orderId",
             [orderId]
         );
         res.status(201).json({
@@ -275,7 +275,7 @@ async function cancelOrder(req, res) {
     const {orderId} = req.params;
     try {
         const findQuery = await pool.query(
-            "SELECT * FROM order WHERE orderid = $1",
+            "SELECT * FROM order_table WHERE orderid = $1",
             [orderId]
         );
         if (findQuery.rows === 0) {
@@ -303,7 +303,7 @@ async function cancelOrder(req, res) {
             return
         }
         const updateQuery = await pool.query(
-            "UPDATE order SET status = 'CANCELED' WHERE orderid = $1 RETURNING orderId",
+            "UPDATE order_table SET status = 'CANCELED' WHERE orderid = $1 RETURNING orderId",
             [orderId]
         );
         res.status(201).json({

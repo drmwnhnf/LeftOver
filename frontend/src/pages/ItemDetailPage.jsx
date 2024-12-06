@@ -122,7 +122,7 @@ const ItemDetailPage = () => {
       if (response.data.success) {
         alert("Order berhasil dibuat!");
         console.log("Order Data:", response.data.data);
-        navigate("/order");
+        navigate(`/order/${localStorage.getItem("accountid")}`);
       } else {
         alert(response.data.message || "Gagal membuat order");
       }
@@ -209,7 +209,7 @@ const ItemDetailPage = () => {
               <button className="icon" onClick={() => handleNavigate("/")}>
                 <FaHouseUser />
               </button>
-              <button className="icon" onClick={() => handleNavigate("/order")}>
+              <button className="icon" onClick={() => handleNavigate(`/order/${localStorage.getItem("accountid")}`)}>
                 <FaShoppingBasket />
               </button>
               <button

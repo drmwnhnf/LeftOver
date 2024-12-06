@@ -1,165 +1,189 @@
-import React, { useState, useEffect } from "react";
-import axios from "axios";
-import "./OrderPage.css";
+import React, { useEffect, useState } from "react";
+import { useNavigate } from "react-router-dom";
 import {
   FaRocketchat,
+  FaUserCircle,
   FaShoppingBasket,
+  FaChevronLeft,
+  FaChevronRight,
   FaSignOutAlt,
   FaSignInAlt,
-  FaHouseUser,
+  FaSearch,
 } from "react-icons/fa";
-import { useNavigate } from "react-router-dom";
+import "./OrderPage.css";
 
 const OrderPage = () => {
+  const navigate = useNavigate();
   const [orders, setOrders] = useState([]);
   const [searchQuery, setSearchQuery] = useState("");
-  const [isLoggedIn, setIsLoggedIn] = useState(true); // Change based on your auth logic
-  const [isLoading, setIsLoading] = useState(true);
-  const [activeTab, setActiveTab] = useState("buy");
-  const [itemData, setItemData] = useState(null);
-  const [loadingOrders, setLoadingOrders] = useState(true);
-  const navigate = useNavigate();
+  const [isLoggedIn, setIsLoggedIn] = useState(false);
+  const [accountid, setAccountId] = useState(null);
 
-  //   const storedAccountId = localStorage.getItem("accountid");
+  const [currentPage, setCurrentPage] = useState(1);
+  const [itemsPerPage] = useState(10);
 
   useEffect(() => {
-    const storedAccountId = localStorage.getItem("accountid"); // Replace with actual stored account ID logic
-    if(storedAccountId) {
+    const storedAccountId = localStorage.getItem("accountid");
+    if (storedAccountId) {
       setIsLoggedIn(true);
-      fetchOrderHistory(storedAccountId);
+      setAccountId(storedAccountId);
+      fetchOrders(storedAccountId);
     } else {
       setIsLoggedIn(false);
+      setAccountId(null);
+      navigate("/login");
     }
-    console.log("Logged in as accountid:", storedAccountId);
-  }, []);
-  
-  const fetchOrderHistory = async (storedAccountId) => {
-    setLoadingOrders(true);
+  }, [currentPage]);
+
+  const fetchOrders = async (accountId) => {
     try {
-      const buyerId = storedAccountId;
-      const response = await axios.get(
-        `http://localhost:8000/order/out/${storedAccountId}`
+      const response = await fetch(
+        `http://localhost:8000/order/out/${accountId}`
       );
-
-      if (response.data.success) {
-        const orderHistory = response.data.data; // Ini adalah array
-        setOrders(orderHistory);
-
-        console.log("Order History:", orderHistory);
-
-        // Iterasi melalui setiap elemen orderHistory untuk mendapatkan itemid
-        const itemDataArray = await Promise.all(
-          orderHistory.map(async (orders) => {
-            const itemid = orders.itemid;
-            const dataresponse = await axios.get(
-              `http://localhost:8000/item/${itemid}`
-            );
-            return dataresponse.data.data;
-          })
-        );
-
-        setItemData(itemDataArray); // Menyimpan data item dalam bentuk array
-        console.log("Item Data:", itemDataArray);
+      const data = await response.json();
+      if (data.success) {
+        setOrders(data.data);
       }
-
-      setIsLoading(false);
     } catch (error) {
-      console.error("Error fetching order history:", error);
-      setIsLoading(false);
-      setLoadingOrders(false);
+      console.error("Error fetching orders:", error);
     }
   };
 
   const handleSearch = (e) => {
     e.preventDefault();
-    console.log("Search:", searchQuery);
+    console.log("Search query:", searchQuery);
   };
 
-  const handleNavigate = (path) => {
-    navigate(path);
+  const calculateTotalPages = () => Math.ceil(orders.length / itemsPerPage);
+
+  const handlePageChange = (newPage) => {
+    setCurrentPage(newPage);
+  };
+
+  const handleOrderClick = (orderId) => {
+    navigate(`/orderdetails/${orderId}`);
   };
 
   const handleLogout = () => {
+    localStorage.removeItem("accountid");
     setIsLoggedIn(false);
+    setAccountId(null);
     navigate("/login");
   };
 
+  const displayedOrders = orders.slice(
+    (currentPage - 1) * itemsPerPage,
+    currentPage * itemsPerPage
+  );
+
   return (
-    <div className="container">
-      <div className="header">
-        <form
-          onSubmit={handleSearch}
-          style={{ width: "100%", display: "flex", alignItems: "center" }}
-        >
+    <div className="orderpage-container">
+      {/* Navbar */}
+      <div className="orderpage-navbar">
+        <div className="navbar-logo">Order History</div>
+        <form onSubmit={handleSearch} className="search-bar">
           <input
             type="text"
-            placeholder="What do you want to eat today?"
-            className="search-bar"
+            placeholder="Search orders..."
+            className="search-input-field"
             value={searchQuery}
             onChange={(e) => setSearchQuery(e.target.value)}
           />
-          <button type="submit" style={{ display: "none" }}>
-            Search
+          <button type="submit" className="search-submit-button">
+            <FaSearch />
           </button>
         </form>
-        <div className="icons">
+        <div className="navbar-icons-container">
           {isLoggedIn ? (
             <>
-              <button className="icon" onClick={() => handleNavigate("/chat")}>
+              <div
+                onClick={() => navigate(`/chat`)}
+                className="navbar-icon-button"
+              >
                 <FaRocketchat />
-              </button>
-              <button className="icon" onClick={() => handleNavigate("/")}>
-                <FaHouseUser />
-              </button>
-              <button className="icon logout" onClick={handleLogout}>
+              </div>
+              <div
+                onClick={() => navigate(`/order/${accountid}`)}
+                className="navbar-icon-button"
+              >
+                <FaShoppingBasket />
+              </div>
+              <div
+                onClick={() => navigate(`/profile/${accountid}`)}
+                className="navbar-icon-button"
+              >
+                <FaUserCircle />
+              </div>
+              <div
+                onClick={handleLogout}
+                className="navbar-icon-button logout-icon-button"
+              >
                 <FaSignOutAlt />
-              </button>
+              </div>
             </>
           ) : (
-            <button className="icon" onClick={() => navigate("/login")}>
+            <div
+              onClick={() => navigate("/login")}
+              className="navbar-icon-button"
+            >
               <FaSignInAlt />
-            </button>
+            </div>
           )}
         </div>
       </div>
 
-      <div className="order-history">
-        <h2>My Order</h2>
-        {isLoading ? (
-          <p>Loading...</p>
-        ) : orders.length > 0 ? (
-          orders.map((order) => (
-            itemData.map((itemData) => (
-            <div className="order-card" key={order.id}>
-              <div className="order-header">
-                <span className="store-name">{itemData.firstname + " " + itemData.surname}</span>
-                <span className="order-date">{order.date}</span>
-                <span className={`order-status ${order.status.toLowerCase()}`}>
+      {/* Orders Grid */}
+      <div className="order-grid">
+        {displayedOrders.length > 0 ? (
+          displayedOrders.map((order) => (
+            <div
+              key={order.orderid}
+              className="order-card-container"
+              onClick={() => handleOrderClick(order.orderid)}
+            >
+              <img
+                src={order.item_image || "https://via.placeholder.com/100"}
+                alt={order.item_name || "Product"}
+                className="order-card-image"
+              />
+              <div className="order-info-container">
+                <h3 className="order-product-name">{order.item_name}</h3>
+                <p className="order-product-quantity">
+                  Quantity: {order.quantity}
+                </p>
+                <p className="order-total-price">
+                  Total: Rp{order.totalprice?.toLocaleString()}
+                </p>
+                <p className={`order-status ${order.status.toLowerCase()}`}>
                   {order.status}
-                </span>
-              </div>
-              <div className="order-details">
-                <img
-                  src={itemData.imageurl}
-                  alt={itemData.item_name}
-                  className="order-image"
-                />
-                <div className="order-info">
-                  <p className="product-name">{itemData.item_name}</p>
-                  <p className="product-quantity">
-                    {order.quantity} barang x Rp {itemData.price}
-                  </p>
-                </div>
-                <div className="order-total">
-                  <p>Total Harga</p>
-                  <p>Rp {order.totalprice}</p>
-                </div>
+                </p>
               </div>
             </div>
-          ))))
+          ))
         ) : (
-          <p>No orders found</p>
+          <p>Loading orders...</p>
         )}
+      </div>
+
+      {/* Pagination */}
+      <div className="pagination-container">
+        <div
+          onClick={() => handlePageChange(currentPage - 1)}
+          className={`pagination-button ${currentPage === 1 ? "disabled" : ""}`}
+        >
+          <FaChevronLeft /> Prev
+        </div>
+        <span className="page-info">
+          Page {currentPage} of {calculateTotalPages()}
+        </span>
+        <div
+          onClick={() => handlePageChange(currentPage + 1)}
+          className={`pagination-button ${
+            currentPage === calculateTotalPages() ? "disabled" : ""
+          }`}
+        >
+          Next <FaChevronRight />
+        </div>
       </div>
     </div>
   );
