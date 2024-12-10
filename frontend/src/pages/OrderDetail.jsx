@@ -2,19 +2,32 @@ import React, { useState, useEffect } from "react";
 import axios from "axios";
 import { useParams, useNavigate } from "react-router-dom";
 import "./OrderDetail.css";
+import { FaArrowLeft } from "react-icons/fa";
 
 const OrderDetail = () => {
   const { orderId } = useParams();
   const [orderData, setOrderData] = useState(null);
   const [itemData, setItemData] = useState(null);
-  const [accountId, setAccountId] = useState(localStorage.getItem("accountid"));
+  const [accountId, setAccountId] = useState();
   const [isSeller, setIsSeller] = useState(false);
   const [error, setError] = useState(null);
   const [loading, setLoading] = useState(true);
   const [orderCodeInput, setOrderCodeInput] = useState("");
   const navigate = useNavigate();
 
+  
   useEffect(() => {
+    const storedAccountData = localStorage.getItem("accountid");
+    if (storedAccountData) {
+      try {
+        const parsedData = JSON.parse(storedAccountData); // Parsing JSON
+        if (parsedData.value) {
+          setAccountId(parsedData.value); // Ambil hanya accountId
+        }
+      } catch (error) {
+        console.error("Failed to parse account ID:", error);
+      }
+    }
     const fetchOrderDetails = async () => {
       try {
         const orderResponse = await axios.get(
@@ -167,15 +180,23 @@ const OrderDetail = () => {
 
   return (
     <div className="order-details-container">
+      <div className="order-details-navbar">
+        <div className="navbar-logo">
+          <button className="order-det-back-btn" onClick={() => window.history.back()}>
+            <FaArrowLeft />
+          </button>
+
+        </div>
+      </div>
       <h1>Order Details</h1>
       <div className="order-card">
         <img
-          src={itemData?.imageurl || "https://via.placeholder.com/200"}
-          alt={itemData?.item_name || "Order Item"}
+          src={itemData.imageurl || "https://via.placeholder.com/200"}
+          alt={itemData.item_name || "Order Item"}
           className="order-image"
         />
         <div className="order-info">
-          <h2>{itemData?.item_name || "Item Name"}</h2>
+          <h2>{itemData.item_name || "Item Name"}</h2>
           <p>Quantity: {orderData.quantity}</p>
           <p>Total Price: Rp {orderData.totalprice.toLocaleString()}</p>
           <p>Status: {orderData.status}</p>

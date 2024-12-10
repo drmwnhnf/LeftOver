@@ -50,7 +50,7 @@ const RegisterPage = () => {
       console.log("Registrasi berhasil:", registerResponse.data);
 
       // Simpan accountId di localStorage
-      localStorage.setItem("accountid", data);
+      localStorage.setItem("verifid", data);
 
       // Step 2: Kirim permintaan verifikasi
       await axios.post(
@@ -61,7 +61,7 @@ const RegisterPage = () => {
       console.log("Request verifikasi berhasil");
 
       // Step 3: Arahkan ke halaman verifikasi
-      navigate(`/register/verify/${localStorage.getItem("accountid")}`);
+      navigate(`/register/verify/${localStorage.getItem("verifid")}`);
     } catch (err) {
       console.error("Error registrasi atau verifikasi:", err);
       setError("Registrasi gagal. Silakan cek data Anda.");

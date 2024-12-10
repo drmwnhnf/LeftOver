@@ -19,18 +19,23 @@ const HomePage = () => {
   const [isLoggedIn, setIsLoggedIn] = useState(false);
   const [accountid, setAccountId] = useState(null);
   const [searchQuery, setSearchQuery] = useState("");
-
   const [currentPage, setCurrentPage] = useState(1);
-  const [itemsPerPage] = useState(20);
+  const [itemsPerPage] = useState(10);
 
   useEffect(() => {
-    const storedAccountId = localStorage.getItem("accountid");
-    if (storedAccountId) {
-      setIsLoggedIn(true);
-      setAccountId(storedAccountId);
-    } else {
-      setIsLoggedIn(false);
-      setAccountId(null);
+    const storedAccountData = localStorage.getItem("accountid");
+    if (storedAccountData) {
+      try {
+        const parsedData = JSON.parse(storedAccountData); // Parsing JSON
+        if (parsedData.value) {
+          console.log("Account Data:", parsedData); // Log seluruh data
+          setIsLoggedIn(true);
+          setAccountId(parsedData.value); // Ambil hanya accountId
+          console.log("Account ID:", accountid); // Log hanya ID
+        }
+      } catch (error) {
+        console.error("Failed to parse account ID:", error);
+      }
     }
     fetchItems();
   }, [currentPage]);

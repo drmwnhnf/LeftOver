@@ -3,34 +3,37 @@ import { useParams } from "react-router-dom";
 import "./Chat.css";
 
 function Chat() {
-  const { chatroomId } = useParams(); // Ambil chatroomId dari URL
-  const [chatBubbles, setChatBubbles] = useState([]); // Bubble chat
-  const [newMessage, setNewMessage] = useState(""); // Pesan baru
-  const senderId = localStorage.getItem("firstAccountId"); // ID pengirim dari localStorage
+  const { chatroomId } = useParams();
+  const [chatBubbles, setChatBubbles] = useState([]);
+  const [newMessage, setNewMessage] = useState("");
+  const senderId = localStorage.getItem("firstAccountId");
 
   useEffect(() => {
-    // Ambil bubble chat dari API saat komponen dimuat
-    fetch(`http://localhost:8000/chat/r/${chatroomId}`)
-      .then((res) => {
-        if (!res.ok) {
-          throw new Error(`HTTP error! status: ${res.status}`);
-        }
-        return res.json();
-      })
-      .then((data) => {
+    // Fetch awal data chat
+    const fetchChats = async () => {
+      try {
+        const res = await fetch(`http://localhost:8000/chat/r/${chatroomId}`);
+        const data = await res.json();
         if (data.success) {
-          setChatBubbles(data.data); // Set bubble chat ke state
-        } else {
-          console.error("Failed to fetch chat bubbles:", data.message);
+          setChatBubbles(data.data);
         }
-      })
-      .catch((error) => {
+      } catch (error) {
         console.error("Error fetching chat bubbles:", error);
-      });
+      }
+    };
+
+    // Jalankan fetch pertama kali
+    fetchChats();
+
+    // Polling setiap 5 detik untuk mendapatkan pesan baru
+    const intervalId = setInterval(fetchChats, 5000);
+
+    // Bersihkan interval saat komponen dilepas
+    return () => clearInterval(intervalId);
   }, [chatroomId]);
 
   const handleSendMessage = async () => {
-    if (newMessage.trim() === "") return; // Jangan kirim pesan kosong
+    if (newMessage.trim() === "") return;
 
     try {
       const response = await fetch(
@@ -48,7 +51,7 @@ function Chat() {
 
       const data = await response.json();
       if (data.success) {
-        setChatBubbles([...chatBubbles, data.data]); // Tambahkan pesan baru ke bubble chat
+        setChatBubbles((prev) => [...prev, data.data]); // Tambahkan pesan ke state
         setNewMessage(""); // Kosongkan input
       } else {
         alert("Failed to send message. Please try again.");
@@ -56,6 +59,17 @@ function Chat() {
     } catch (error) {
       console.error("Error sending message:", error);
     }
+  };
+
+  // Fungsi untuk memformat waktu ke format Indonesia tanpa detik
+  const formatTime = (timestamp) => {
+    const date = new Date(timestamp); // Buat objek Date dari timestamp
+    const localTime = new Date(date.getTime() + 7 * 60 * 60 * 1000); // Tambahkan 7 jam (offset untuk WIB)
+
+    return localTime.toLocaleTimeString("id-ID", {
+      hour: "2-digit",
+      minute: "2-digit",
+    });
   };
 
   return (
@@ -75,6 +89,7 @@ function Chat() {
             }`}
           >
             {bubble.chatcontent}
+            <div className="chat-timestamp">{formatTime(bubble.sentat)}</div>
           </div>
         ))}
       </div>

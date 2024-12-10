@@ -1,12 +1,12 @@
 import React, { useState, useEffect } from "react";
 import axios from "axios";
 import { useNavigate } from "react-router-dom";
-import { FaPlus, FaTrash, FaEdit } from "react-icons/fa";
+import { FaPlus, FaTrash, FaEdit, FaBackward, FaArrowAltCircleLeft } from "react-icons/fa";
 import "./SellerItem.css";
 
 const SellerItem = () => {
   const navigate = useNavigate();
-  const [accountId, setAccountId] = useState(localStorage.getItem("accountid"));
+  const [accountId, setAccountId] = useState(null);
   const [items, setItems] = useState([]);
   const [isLoading, setIsLoading] = useState(false);
   const [isAddModalOpen, setIsAddModalOpen] = useState(false);
@@ -14,20 +14,69 @@ const SellerItem = () => {
     name: "",
     price: "",
     expirationDate: "",
-    imageURL: "",
+    imageurl: "",
     description: "",
     amount: 1,
-    itemCategory: [],
+    itemCategories: [],
     itemCondition: "FRESH",
   });
 
-  useEffect(() => {
-    if (!accountId) {
-      navigate("/login");
+  // Tambahkan kategori ENUM untuk dropdown
+  const categories = [
+    "FRUITS",
+    "VEGETABLES",
+    "BEEF",
+    "POULTRIES",
+    "PORK",
+    "SEAFOOD",
+    "LAMB",
+    "MILKS",
+    "PLANT_PROTEINS",
+    "OTHER_ANIMAL_PRODUCTS",
+    "OTHER_PLANT_PRODUCTS",
+    "STAPLES",
+    "PROCESSED",
+    "BEVERAGES",
+    "SEASONINGS",
+    "SNACKS",
+  ];
+
+  // Fungsi untuk menangani perubahan kategori
+  const handleCategoryChange = (e, isEdit = false) => {
+    const { value, checked } = e.target;
+    if (isEdit) {
+      setEditItem((prev) => {
+        const newCategories = checked
+          ? [...prev.itemCategories, value]
+          : prev.itemCategories.filter((cat) => cat !== value);
+        return { ...prev, itemCategories: newCategories };
+      });
     } else {
-      fetchItems();
+      setNewItem((prev) => {
+        const newCategories = checked
+          ? [...prev.itemCategories, value]
+          : prev.itemCategories.filter((cat) => cat !== value);
+        return { ...prev, itemCategories: newCategories };
+      });
     }
-  }, [accountId]);
+  };
+
+  // Tambahkan kategori di formulir
+  const renderCategorySelection = (selectedCategories = [], isEdit = false) => {
+    return categories.map((category) => (
+      <div key={category} className="seller-form-checkbox">
+        <label>
+          <input
+            type="checkbox"
+            value={category}
+            checked={selectedCategories.includes(category)} // Checkbox tercentang jika kategori sudah dipilih
+            onChange={(e) => handleCategoryChange(e, isEdit)}
+          />
+          {category}
+        </label>
+      </div>
+    ));
+  };
 
   const fetchItems = async () => {
     setIsLoading(true);
@@ -75,6 +124,7 @@ const SellerItem = () => {
   };
 
   const handleDeleteItem = async (itemId) => {
+    console.log("Deleting item with id:", itemId);
     const confirm = window.confirm(
       "Are you sure you want to delete this item?"
     );
@@ -87,6 +137,7 @@ const SellerItem = () => {
           alert("Item deleted successfully!");
           fetchItems();
         } else {
+          console.log(response.data.message);
           alert("Failed to delete item.");
         }
       } catch (error) {
@@ -95,8 +146,15 @@ const SellerItem = () => {
     }
   };
 
-  // Fungsi Upload Gambar
-  const uploadImage = async (file) => {
+  const handleFileChangeEdit = (e) => {
+    const file = e.target.files[0];
+    if (file) {
+      uploadImage(file, true); // True menandakan ini untuk edit
+    }
+  };
+
+  // Modifikasi uploadImage agar mendukung edit
+  const uploadImage = async (file, isEdit = false) => {
     const formData = new FormData();
     formData.append("file", file);
     formData.append("upload_preset", "xk7bhbie"); // Ganti dengan upload preset Anda
@@ -108,8 +166,12 @@ const SellerItem = () => {
         formData
       );
       if (response.status === 200) {
-        const imageUrl = response.data.secure_url;
-        setNewItem((prev) => ({ ...prev, imageurl: imageUrl }));
+        const imageurl = response.data.secure_url;
+        if (isEdit) {
+          setEditItem((prev) => ({ ...prev, imageurl: imageurl }));
+        } else {
+          setNewItem((prev) => ({ ...prev, imageurl: imageurl }));
+        }
         alert("Gambar berhasil diunggah!");
       } else {
         alert("Gagal mengunggah gambar.");
@@ -126,6 +188,8 @@ const SellerItem = () => {
       uploadImage(file);
     }
   };
+
+  console.log("Current accountId:", accountId);
 
   const renderAddModal = () => {
     if (!isAddModalOpen) return null;
@@ -187,6 +251,12 @@ const SellerItem = () => {
               />
             </div>
             <div className="seller-form-group">
+              <label>Categories</label>
+              <div className="seller-form-categories">
+                {renderCategorySelection(newItem.itemCategories)}
+              </div>
+            </div>
+            <div className="seller-form-group">
               <label>Condition</label>
               <select
                 name="itemCondition"
@@ -224,10 +294,10 @@ const SellerItem = () => {
     name: "",
     price: "",
     expirationDate: "",
-    imageURL: "",
+    imageurl: "",
     description: "",
     amount: 1,
-    itemCategory: [],
+    itemCategories: [],
     itemCondition: "FRESH",
   });
 
@@ -264,17 +334,20 @@ const SellerItem = () => {
       name: item.name,
       price: item.price,
       expirationDate: item.expirationdate,
-      imageURL: item.imageurl,
+      imageurl: item.imageurl,
       description: item.description,
       amount: item.amount,
-      itemCategory: item.categories || [],
-      itemCondition: item.condition || "FRESH",
+      itemCategories: item.category || [], // Jika kategori kosong, gunakan array kosong
+      itemCondition: item.itemCondition || "FRESH",
     });
     setIsEditModalOpen(true);
   };
 
+
+
   const renderEditModal = () => {
     if (!isEditModalOpen) return null;
+    console.log("Edit Item Data:", editItem);
     return (
       <div className="seller-modal-overlay">
         <div className="seller-modal-content">
@@ -312,7 +385,21 @@ const SellerItem = () => {
             </div>
             <div className="seller-form-group">
               <label>Upload Image</label>
-              <input type="file" accept="image/*" onChange={handleFileChange} />
+              <input
+                type="file"
+                accept="image/*"
+                onChange={handleFileChangeEdit}
+              />
+              <p>
+                Current Image:{" "}
+                <a
+                  href={editItem.imageurl}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                >
+                  View
+                </a>
+              </p>
             </div>
             <div className="seller-form-group">
               <label>Description</label>
@@ -331,6 +418,12 @@ const SellerItem = () => {
                 onChange={handleEditItemChange}
                 required
               />
+            </div>
+            <div className="seller-form-group">
+              <label>Categories</label>
+              <div className="seller-form-categories">
+                {renderCategorySelection(editItem.itemCategories, true)}
+              </div>
             </div>
             <div className="seller-form-group">
               <label>Condition</label>
@@ -364,6 +457,27 @@ const SellerItem = () => {
     );
   };
 
+  useEffect(() => {
+    const storedAccountData = localStorage.getItem("accountid");
+    if (storedAccountData) {
+      const parsedData = JSON.parse(storedAccountData);
+      if (parsedData.value) {
+        setAccountId(parsedData.value);
+      }
+    } else {
+      navigate("/login");
+    }
+  }, []);
+
+  useEffect(() => {
+    if (accountId === null) return; // Tunggu sampai accountId tidak null
+    if (!accountId) {
+      navigate("/login");
+    } else {
+      fetchItems();
+    }
+  }, [accountId]);
+
   return (
     <div className="seller-container">
       <div className="seller-header">
@@ -371,7 +485,7 @@ const SellerItem = () => {
           className="seller-back-btn"
           onClick={() => navigate("/profile/" + accountId)}
         >
-          Back to Profile
+          <FaArrowAltCircleLeft />
         </button>
         <h1>Your Items</h1>
         <button

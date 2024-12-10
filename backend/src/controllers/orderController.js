@@ -38,7 +38,7 @@ async function getSellerOrder(req, res) {
   try {
     const findQuery = await pool.query(
       `
-            SELECT o.*, i.name AS item_name, i.imageURL AS item_image
+            SELECT o.*, i.name AS item_name, i.imageurl AS item_image
             FROM order_table o
             LEFT JOIN item i ON o.itemid = i.itemid
             WHERE o.sellerid = $1
@@ -75,7 +75,7 @@ async function getBuyerOrder(req, res) {
   try {
     const findQuery = await pool.query(
       `
-            SELECT o.*, i.name AS item_name, i.imageURL AS item_image
+            SELECT o.*, i.name AS item_name, i.imageurl AS item_image
             FROM order_table o
             LEFT JOIN item i ON o.itemid = i.itemid
             WHERE o.buyerid = $1

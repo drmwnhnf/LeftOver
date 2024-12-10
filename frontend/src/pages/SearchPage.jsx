@@ -6,6 +6,7 @@ import {
   FaShoppingBasket,
   FaSignOutAlt,
   FaSignInAlt,
+  FaSearch,
 } from "react-icons/fa";
 import "./SearchPage.css";
 
@@ -46,10 +47,18 @@ const SearchPage = () => {
   const [expirationDate, setExpirationDate] = useState("");
 
   useEffect(() => {
-    const storedAccountId = localStorage.getItem("accountid");
-    if (storedAccountId) {
-      setIsLoggedIn(true);
-      setAccountId(storedAccountId);
+    const storedAccountData = localStorage.getItem("accountid");
+    if (storedAccountData) {
+      try {
+        const parsedData = JSON.parse(storedAccountData); // Parsing JSON
+        if (parsedData.value) {
+          setIsLoggedIn(true);
+          setAccountId(parsedData.value); // Ambil hanya accountId
+          console.log("Account ID:", accountId); // Log hanya ID
+        }
+      } catch (error) {
+        console.error("Failed to parse account ID:", error);
+      }
     }
     fetchItems();
     localStorage.removeItem("searchQuery");
@@ -165,7 +174,7 @@ const SearchPage = () => {
             onChange={(e) => setSearchQuery(e.target.value)}
           />
           <button className="search-submit-button" onClick={fetchItems}>
-            Search
+            <FaSearch />
           </button>
         </div>
         <div className="navbar-icons-container">
@@ -173,7 +182,7 @@ const SearchPage = () => {
             <>
               <button
                 className="navbar-icon-button"
-                onClick={() => handleNavigate("/chat")}
+                onClick={() => handleNavigate("/chat/")}
               >
                 <FaRocketchat />
               </button>

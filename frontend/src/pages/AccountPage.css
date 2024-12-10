@@ -3,6 +3,7 @@ body {
   margin: 0;
   font-family: Arial, sans-serif;
   background-color: #f8f9fa;
+  background: #f8f9fa;
 }
 
 /* Account Container */
@@ -55,6 +56,7 @@ body {
   color: white;
   cursor: pointer;
   font-size: 1rem;
+  margin-bottom: 10px;
 }
 
 .account-search-submit-button:hover {
@@ -78,47 +80,6 @@ body {
 .logout {
   color: #ff6f61;
 }
-/* .account-header {
-  position: sticky;
-  top: 0;
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  width: 100%;
-  background-color: #28a745;
-  padding: 10px 20px;
-  z-index: 100;
-}
-
-.account-search-bar {
-  flex-grow: 1;
-  margin-right: 20px;
-}
-
-.account-search-bar input {
-  width: 100%;
-  padding: 8px;
-  border: none;
-  border-radius: 20px;
-  font-size: 0.9rem;
-}
-
-.account-icons {
-  display: flex;
-  gap: 15px;
-}
-
-.account-icon {
-  font-size: 1.5rem;
-  color: white;
-  cursor: pointer;
-  background: none;
-  border: none;
-}
-
-.logout {
-  color: #ff6f61;
-} */
 
 /* Profile Card */
 .account-profile-card {
@@ -262,8 +223,7 @@ body {
 .account-order-image {
   width: 120px;  /* Lebarkan gambar */
   height: 120px;
-  object-fit: cover;
-  margin-right: 25px;  /* Menambah jarak antara gambar dan teks */
+  object-fit: cover; /* Menambah jarak antara gambar dan teks */
   border-radius: 8px;
 }
 
@@ -272,8 +232,7 @@ body {
   flex-direction: column;
   justify-content: space-between;
   align-items: flex-end;
-  flex-grow: 1;
-  padding-left: 30px;  /* Menambah jarak kiri */
+  flex-grow: 1; /* Menambah jarak kiri */
 }
 
 .account-total-price {
@@ -288,20 +247,24 @@ body {
   font-size: 1.2rem;  /* Lebih besar agar terlihat lebih jelas */
   font-weight: 600;
   border-radius: 5px;
-  color: white;
+  color: black;
   text-transform: capitalize;
 }
 
-.account-status.done {
+.account-status.DONE {
   background-color: #28a745;
 }
 
-.account-status.ongoing {
-  background-color: #ffc107;
+.account-status.WAITING {
+  background: #ffc107;
 }
 
-.account-status.canceled {
+.account-status.CANCELED {
   background-color: #ff6f61;
+}
+
+.account-status.ONGOING {
+  background-color: #007bff;
 }
 
 

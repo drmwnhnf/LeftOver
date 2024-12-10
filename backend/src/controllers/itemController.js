@@ -5,7 +5,7 @@ async function getItembyId(req, res) {
   const { itemId } = req.params;
   try {
     const result = await pool.query(
-      "SELECT i.itemid, i.name AS item_name, i.price, i.imageurl as imageurl, i.description, i.amount, i.expirationdate, a.accountid as sellerid, a.username AS seller_name, a.email AS seller_email, a.country AS seller_country, a.address AS seller_address, a.firstname AS firstname, a.surname AS surname, a.phonenumber as seller_phone, a.district as district FROM item i JOIN account a ON i.sellerid = a.accountid WHERE i.itemid = $1;",
+      "SELECT i.itemid, i.name AS item_name, i.price, i.imageurl as imageurl, i.description, i.amount, i.expirationdate, a.accountid as sellerid, a.username AS seller_name, a.email AS seller_email, a.country AS seller_country, a.address AS seller_address, a.firstname AS firstname, a.surname AS surname, a.phonenumber as seller_phonee, a.district as district, a.imageurl as seller_image, a.city as seller_city FROM item i JOIN account a ON i.sellerid = a.accountid WHERE i.itemid = $1;",
       [itemId]
     );
     if (result.rowCount === 0) {
@@ -60,18 +60,24 @@ async function createItem(req, res) {
     expirationDate,
     imageurl,
     description,
-    itemCategory,
+    itemCategories,
     itemCondition,
     amount,
   } = req.body;
+
+  // Debugging log untuk memeriksa data yang diterima
+  console.log("Request Body:", req.body);
+
+  // Validasi input
   if (
-    name.length === 0 ||
-    price.length === 0 ||
-    expirationDate.length === 0 ||
-    imageurl.length === 0 ||
-    itemCondition.length === 0 ||
-    amount === 0
+    !name ||
+    !price ||
+    !expirationDate ||
+    !imageurl ||
+    !itemCondition ||
+    !amount
   ) {
+    console.error("Validation failed: Missing required fields");
     res.status(400).json({
       success: false,
       message: "Create Item Failed! Data not complete!",
@@ -79,31 +85,58 @@ async function createItem(req, res) {
     });
     return;
   }
+
+  if (isNaN(price) || isNaN(amount)) {
+    console.error("Validation failed: Price or amount is not a number");
+    res.status(400).json({
+      success: false,
+      message: "Price and amount must be numbers!",
+      data: null,
+    });
+    return;
+  }
+
+  if (!Array.isArray(itemCategories)) {
+    console.error("Validation failed: itemCategories is not an array");
+    res.status(400).json({
+      success: false,
+      message: "Item categories must be an array!",
+      data: null,
+    });
+    return;
+  }
+
   try {
+    // Insert item ke tabel utama
     const insertQuery = await pool.query(
       "INSERT INTO item (sellerid, name, price, expirationDate, imageurl, description, amount) VALUES ($1, $2, $3, $4, $5, $6, $7) RETURNING itemId",
       [sellerid, name, price, expirationDate, imageurl, description, amount]
     );
+    console.log("Item created with ID:", insertQuery.rows[0].itemid);
+
+    // Insert itemCondition
     await pool.query(
       "INSERT INTO itemconditions (itemId, itemcondition) VALUES ($1, $2)",
       [insertQuery.rows[0].itemid, itemCondition]
     );
-    if (itemCategory.length != 0) {
-      for (let i of itemCategory) {
-        await pool.query(
-          "INSERT INTO itemcategories (itemId, category) VALUES ($1, $2)",
-          [insertQuery.rows[0].itemid, i]
-        );
-      }
+    console.log("Item condition inserted:", itemCondition);
+
+    // Insert itemCategories
+    for (let category of itemCategories) {
+      await pool.query(
+        "INSERT INTO itemcategories (itemId, category) VALUES ($1, $2)",
+        [insertQuery.rows[0].itemid, category]
+      );
+      console.log("Item category inserted:", category);
     }
+
     res.status(201).json({
       success: true,
       message: "Create Item Success!",
       data: insertQuery.rows[0],
     });
-    return;
   } catch (error) {
-    logger.error(error);
+    console.error("Error during item creation:", error);
     res.status(500).json({
       success: false,
       message: "Internal Server Error",
@@ -222,13 +255,17 @@ async function searchItem(req, res) {
 
 
 async function deleteItem(req, res) {
-  const { itemId } = req.params;
+  console.log("req.params:", req.params); // Debugging
+  const { itemid } = req.params;
+  console.log("Received itemid for deletion:", itemid); // Debugging
   try {
     const orderCheck = await pool.query(
-      "SELECT * AS count FROM order WHERE itemId = $1 AND status IN ('WAITING', 'ONGOING')",
-      [itemId]
+      "SELECT * FROM order_table WHERE itemid = $1 AND status IN ('WAITING', 'ONGOING')",
+      [itemid]
     );
-    if (orderCheck.rowCount != 0) {
+    console.log("Order check result:", orderCheck.rows); // Debug
+
+    if (orderCheck.rowCount !== 0) {
       res.status(400).json({
         success: false,
         message: "Delete failed! Item has ongoing orders!",
@@ -236,35 +273,37 @@ async function deleteItem(req, res) {
       });
       return;
     }
+
     const searchQuery = await pool.query(
       "SELECT * FROM item WHERE itemid = $1",
-      [itemId]
+      [itemid]
     );
-    if (searchQuery.rowCount != 0) {
-      await pool.query("DELETE FROM item WHERE itemid = $1", [itemId]);
+    console.log("Search query result:", searchQuery.rows); // Debug
+
+    if (searchQuery.rowCount !== 0) {
+      await pool.query("DELETE FROM item WHERE itemid = $1", [itemid]);
       await pool.query("DELETE FROM itemconditions WHERE itemid = $1", [
-        itemId,
+        itemid,
       ]);
       await pool.query("DELETE FROM itemcategories WHERE itemid = $1", [
-        itemId,
+        itemid,
       ]);
-      await pool.query("DELETE FROM order WHERE itemid = $1", [itemId]);
+      await pool.query("DELETE FROM order_table WHERE itemid = $1", [itemid]);
+
       res.status(200).json({
         success: true,
         message: "Delete success!",
         data: null,
       });
-      return;
     } else {
       res.status(404).json({
         success: false,
-        message: "Delete failed! note not found!",
+        message: "Delete failed! Item not found!",
         data: null,
       });
-      return;
     }
   } catch (error) {
-    logger.error(error);
+    console.error("Error in deleteItem:", error);
     res.status(500).json({
       success: false,
       message: "Internal Server Error",
@@ -279,7 +318,7 @@ async function editItem(req, res) {
     name,
     price,
     expirationDate,
-    imageURL,
+    imageurl,
     description,
     amount,
     itemCategory,
@@ -289,9 +328,9 @@ async function editItem(req, res) {
   try {
     const result = await pool.query(
       `UPDATE item
-                 SET name = $1, price = $2, expirationDate = $3, imageURL = $4, description = $5, amount = $7
+                 SET name = $1, price = $2, expirationDate = $3, imageurl = $4, description = $5, amount = $7
                  WHERE itemId = $6 RETURNING *`,
-      [name, price, expirationDate, imageURL, description, itemId, amount]
+      [name, price, expirationDate, imageurl, description, itemId, amount]
     );
 
     if (result.rowCount === 0) {

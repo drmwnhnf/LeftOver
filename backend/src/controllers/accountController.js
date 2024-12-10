@@ -195,7 +195,7 @@ async function editAccount(req, res) {
       city,
       district,
       address,
-      imageURL,
+      imageurl,
       phonenumber,
       accountid
     } = req.body;
@@ -209,8 +209,8 @@ async function editAccount(req, res) {
         // else send nothing
         if (queryResult.rowCount != 0) {
             const editQuery = await pool.query(
-                "UPDATE account SET firstname = $1, surname = $2, country = $3, city = $4, district = $5, address = $6, imageURL = $7 , phonenumber = $8 WHERE accountId = $9 RETURNING *",
-                [firstname, surname, country, city, district, address, imageURL, phonenumber, accountid]
+                "UPDATE account SET firstname = $1, surname = $2, country = $3, city = $4, district = $5, address = $6, imageurl = $7 , phonenumber = $8 WHERE accountId = $9 RETURNING *",
+                [firstname, surname, country, city, district, address, imageurl, phonenumber, accountid]
             );
             res.status(201).json({
                 success: true,

@@ -17,25 +17,27 @@ const OrderPage = () => {
   const [orders, setOrders] = useState([]);
   const [searchQuery, setSearchQuery] = useState("");
   const [isLoggedIn, setIsLoggedIn] = useState(false);
-  const [accountid, setAccountId] = useState(null);
+  const [accountId, setAccountId] = useState(null);
 
   const [currentPage, setCurrentPage] = useState(1);
   const [itemsPerPage] = useState(10);
 
   useEffect(() => {
-    const storedAccountId = localStorage.getItem("accountid");
-    if (storedAccountId) {
-      setIsLoggedIn(true);
-      setAccountId(storedAccountId);
-      fetchOrders(storedAccountId);
-    } else {
-      setIsLoggedIn(false);
-      setAccountId(null);
-      navigate("/login");
-    }
-  }, [currentPage]);
+    const storedAccountData = localStorage.getItem("accountid");
+    if (storedAccountData) {
+        const parsedData = JSON.parse(storedAccountData); // Parsing JSON
+        if (parsedData.value) {
+          setIsLoggedIn(true);
+          fetchOrders(parsedData.value);
+          setAccountId(parsedData.value); // Ambil hanya accountId
+          console.log("Account ID:", accountId); // Log hanya ID
+        }
+      } else {
+        console.error("Failed to parse account ID");
+      }
+  });
 
-  const fetchOrders = async (accountId) => {
+  const fetchOrders = async () => {
     try {
       const response = await fetch(
         `http://localhost:8000/order/out/${accountId}`
@@ -103,13 +105,13 @@ const OrderPage = () => {
                 <FaRocketchat />
               </div>
               <div
-                onClick={() => navigate(`/order/${accountid}`)}
+                onClick={() => navigate(`/order/${accountId}`)}
                 className="navbar-icon-button"
               >
                 <FaShoppingBasket />
               </div>
               <div
-                onClick={() => navigate(`/profile/${accountid}`)}
+                onClick={() => navigate(`/profile/${accountId}`)}
                 className="navbar-icon-button"
               >
                 <FaUserCircle />

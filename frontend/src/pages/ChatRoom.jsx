@@ -2,7 +2,7 @@ import React, { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import "./ChatRoom.css";
 
-function ChatRoom() {
+const ChatRoom = () => {
   const [chatRooms, setChatRooms] = useState([]);
   const [userNames, setUserNames] = useState({}); // Map untuk menyimpan nama pengguna berdasarkan ID
   const navigate = useNavigate();
@@ -18,7 +18,12 @@ function ChatRoom() {
 
           // Ambil nama lawan bicara berdasarkan ID
           const uniqueIds = [
-            ...new Set(data.data.map((room) => room.secondaccountid)),
+            ...new Set(
+              data.data.flatMap((room) => [
+                room.firstaccountid,
+                room.secondaccountid,
+              ])
+            ),
           ];
           const names = await fetchUserNames(uniqueIds);
           setUserNames(names);
@@ -54,6 +59,7 @@ function ChatRoom() {
         if (data.success) {
           localStorage.setItem("chatBubbles", JSON.stringify(data.data)); // Simpan bubble chat di localStorage
           navigate(`/chat/${chatroomId}`); // Navigasi ke halaman Chat
+          console.log("Your Data :", data.data); // Debug log
         }
       });
   };
@@ -67,18 +73,25 @@ function ChatRoom() {
         </button>
       </div>
       <ul className="chatroom-list">
-        {chatRooms.map((room) => (
-          <li
-            key={room.chatroomid}
-            className="chatroom-item"
-            onClick={() => handleChatRoomClick(room.chatroomid)}
-          >
-            Chat with {userNames[room.secondaccountid] || "Loading..."}
-          </li>
-        ))}
+        {chatRooms.map((room) => {
+          // Tentukan siapa lawan bicara
+          const chatPartnerId =
+            room.firstaccountid === firstId
+              ? room.secondaccountid
+              : room.firstaccountid;
+          return (
+            <li
+              key={room.chatroomid}
+              className="chatroom-item"
+              onClick={() => handleChatRoomClick(room.chatroomid)}
+            >
+              Chat with {userNames[chatPartnerId] || "Loading..."}
+            </li>
+          );
+        })}
       </ul>
     </div>
   );
-}
+};
 
 export default ChatRoom;

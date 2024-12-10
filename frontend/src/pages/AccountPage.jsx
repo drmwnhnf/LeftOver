@@ -19,9 +19,8 @@ const AccountPage = () => {
   const [activeTab, setActiveTab] = useState("buy");
   const [isLoading, setIsLoading] = useState(false);
   const [isLoggedIn, setIsLoggedIn] = useState(false);
-  const [accountId, setAccountId] = useState(localStorage.getItem("accountid"));
+  const [accountId, setAccountId] = useState(null);
   const [searchQuery, setSearchQuery] = useState("");
-
   const [isEditModalOpen, setIsEditModalOpen] = useState(false);
   const [editForm, setEditForm] = useState({
     firstname: "",
@@ -31,9 +30,11 @@ const AccountPage = () => {
     city: "",
     district: "",
     address: "",
-    imageURL: "",
+    imageurl: "",
     phonenumber: "",
   });
+
+  
 
   const locationData = {
     countries: [
@@ -201,8 +202,8 @@ const AccountPage = () => {
     setEditForm((prev) => ({
       ...prev,
       country: selectedCountry,
-      city: "",
-      district: "",
+      city: prev.city || "", // Tetap gunakan nilai sebelumnya jika ada
+      district: prev.district || "", // Tetap gunakan nilai sebelumnya jika ada
     }));
     setCities(country ? country.cities : []);
     setDistricts([]);
@@ -211,24 +212,39 @@ const AccountPage = () => {
   const handleCityChange = (e) => {
     const selectedCity = e.target.value;
     const city = cities.find((c) => c.name === selectedCity);
-    setEditForm((prev) => ({ ...prev, city: selectedCity, district: "" }));
+    setEditForm((prev) => ({
+      ...prev,
+      city: selectedCity,
+      district: prev.district || "", // Tetap gunakan nilai sebelumnya jika ada
+    }));
     setDistricts(city ? city.districts : []);
   };
+
 
   const handleDistrictChange = (e) => {
     const selectedDistrict = e.target.value;
     setEditForm((prev) => ({ ...prev, district: selectedDistrict }));
   };
 
-  useEffect(() => {
-    if (!accountId) {
-      navigate("/login");
-    } else {
-      setIsLoggedIn(true);
-      fetchUserProfile();
-      fetchOrderHistory();
-    }
-  }, [accountId, activeTab]);
+ useEffect(() => {
+   const storedAccountData = localStorage.getItem("accountid");
+   if (storedAccountData) {
+     const parsedData = JSON.parse(storedAccountData);
+     if (parsedData.value) {
+       setIsLoggedIn(true);
+       setAccountId(parsedData.value);
+     }
+   } else {
+     navigate("/login");
+   }
+ }, []);
+
+ useEffect(() => {
+   if (accountId) {
+     fetchUserProfile();
+     fetchOrderHistory();
+   }
+ }, [accountId, activeTab]);
 
   const fetchUserProfile = async () => {
     try {
@@ -246,7 +262,7 @@ const AccountPage = () => {
           city: profile.city || "",
           district: profile.district || "",
           address: profile.address || "",
-          imageURL: profile.imageURL || "",
+          imageurl: profile.imageurl || "",
           phonenumber: profile.phonenumber || "",
         });
       } else {
@@ -303,6 +319,7 @@ const AccountPage = () => {
       });
       if (response.data.success) {
         setUserProfile(response.data.data);
+        console.log("updated data :", response.data.data);
         setIsEditModalOpen(false);
         alert("Profile updated successfully");
       } else {
@@ -349,8 +366,8 @@ const AccountPage = () => {
         formData
       );
       if (response.status === 200) {
-        const imageUrl = response.data.secure_url;
-        setEditForm((prev) => ({ ...prev, imageURL: imageUrl }));
+        const imageurl = response.data.secure_url;
+        setEditForm((prev) => ({ ...prev, imageurl: imageurl }));
         alert("Gambar berhasil diunggah!");
       } else {
         alert("Gagal mengunggah gambar.");
@@ -375,6 +392,19 @@ const AccountPage = () => {
       navigate("/search");
     }
   };
+
+  useEffect(() => {
+    if (isEditModalOpen && editForm.country) {
+      const country = locationData.countries.find(
+        (c) => c.name === editForm.country
+      );
+      setCities(country ? country.cities : []);
+      if (editForm.city) {
+        const city = country?.cities.find((c) => c.name === editForm.city);
+        setDistricts(city ? city.districts : []);
+      }
+    }
+  }, [isEditModalOpen, editForm.country, editForm.city]);
 
   const renderEditModal = () => {
     if (!isEditModalOpen) return null;
@@ -476,6 +506,20 @@ const AccountPage = () => {
             <div className="form-group">
               <label>Upload Image</label>
               <input type="file" accept="image/*" onChange={handleFileChange} />
+              {editForm.imageurl && (
+                <div>
+                  <p>Current Image:</p>
+                  <img
+                    src={editForm.imageurl}
+                    alt="Current Profile"
+                    style={{
+                      width: "100px",
+                      height: "100px",
+                      borderRadius: "5px",
+                    }}
+                  />
+                </div>
+              )}
             </div>
             <div className="form-group">
               <label>Phone Number</label>
@@ -504,6 +548,9 @@ const AccountPage = () => {
     );
   };
 
+  console.log("Current accountId:", accountId);
+  console.log("Active Tab:", activeTab);
+
   return (
     <div className="account-container">
       <div className="account-header">
@@ -530,7 +577,7 @@ const AccountPage = () => {
                 <FaRocketchat />
               </button>
               <button
-                onClick={() => navigate(`/order/${accountid}`)}
+                onClick={() => navigate(`/order/${accountId}`)}
                 className="account-icon"
               >
                 <FaShoppingBasket />
@@ -591,7 +638,7 @@ const AccountPage = () => {
           </div>
         )}
       </div>
-      <div classname="account-order-container">
+      <div className="account-order-container">
         <div className="account-order-history">
           <div className="account-filter-buttons">
             <button
@@ -641,7 +688,7 @@ const AccountPage = () => {
                     Rp {order.totalprice.toLocaleString()}
                   </div>
                   <div
-                    className={`account-status ${order.status.toLowerCase()}`}
+                    className={`account-status ${order.status}`}
                   >
                     {order.status}
                   </div>

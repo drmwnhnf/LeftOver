@@ -41,6 +41,13 @@
   background-color: #f8d7da;
 }
 
+.chat-timestamp {
+  font-size: 0.8rem;
+  color: gray;
+  text-align: right;
+  margin-top: 5px;
+}
+
 .chat-input {
   display: flex;
   padding: 1rem;

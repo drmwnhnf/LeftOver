@@ -16,12 +16,12 @@ import OrderDetail from "./pages/OrderDetail";
 const App = () => (
   <Router>
     <Routes>
+      <Route path="/" element={<HomePage />} />
       <Route path="/login" element={<LoginPage />} />
       <Route path="/register" element={<RegisterPage />} />
       <Route path="/register/verify/:accountid" element={<AuthPage />} />
       <Route path="/chat" element={<ChatRoom />} />
       <Route path="/chat/:chatroomId" element={<Chat />} />
-      <Route path="/" element={<HomePage />} />
       <Route path="/profile/:accountid" element={<AccountPage />} />
       <Route path="/search" element={<SearchPage />} />
       <Route path="/item/:itemid" element={<ItemDetailPage />} />

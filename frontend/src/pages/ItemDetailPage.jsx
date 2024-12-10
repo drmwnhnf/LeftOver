@@ -9,6 +9,7 @@ import {
   FaSignInAlt,
   FaCommentAlt,
   FaHouseUser,
+  FaSearch,
 } from "react-icons/fa";
 import "./ItemDetailPage.css";
 
@@ -18,298 +19,220 @@ const ItemDetailPage = () => {
   const [error, setError] = useState(null);
   const [isLoggedIn, setIsLoggedIn] = useState(false);
   const [accountId, setAccountId] = useState(null);
-  const { itemid } = useParams(); // Mengambil itemId dari URL
+  const [quantity, setQuantity] = useState(1);
+  const { itemid } = useParams();
   const [searchQuery, setSearchQuery] = useState("");
   const navigate = useNavigate();
 
+  // UseEffect untuk memuat account ID dari localStorage
   useEffect(() => {
-    // Cek status login
-    const storedAccountId = localStorage.getItem("accountid");
-    if (storedAccountId) {
-      setIsLoggedIn(true);
-      setAccountId(storedAccountId);
-      console.log("Logged in as accountid:", storedAccountId);
+    const storedAccountData = localStorage.getItem("accountid");
+    if (storedAccountData) {
+      try {
+        const parsedData = JSON.parse(storedAccountData); // Parsing JSON
+        if (parsedData.value) {
+          setIsLoggedIn(true);
+          setAccountId(parsedData.value); // Set accountId ke state
+        }
+      } catch (error) {
+        console.error("Failed to parse account ID:", error);
+      }
     }
+  }, []);
 
+  // UseEffect untuk menyimpan firstAccountId ke localStorage setelah accountId diperbarui
+  useEffect(() => {
+    if (accountId) {
+      console.log("Account ID updated:", accountId); // Debug log
+      localStorage.setItem("firstAccountId", accountId);
+      console.log("First Account ID set to:", accountId); // Debug log
+    }
+  }, [accountId]); // Dipanggil setiap kali accountId berubah
+
+  // Fetch data item
+  useEffect(() => {
     const fetchItemDetails = async () => {
       try {
-        const itemid = localStorage.getItem("selectedItemId");
-        console.log("Fetching item details with ID:", itemid);
-        if (!itemid) {
-          setError("No item ID found");
-          setLoading(false);
-          return;
-        }
-
-        // Fetch item details
-        const itemResponse = await axios.get(
+        const response = await axios.get(
           `http://localhost:8000/item/${itemid}`
         );
-
-        console.log("Item Response:", itemResponse.data);
-
-        if (itemResponse.data.success) {
-          const itemData = itemResponse.data.data;
-          setItemData(itemData);
-          console.log("Item Data:", itemData);
+        if (response.data.success) {
+          setItemData(response.data.data);
         } else {
-          setError(itemResponse.data.message);
+          setError(response.data.message);
         }
       } catch (err) {
         setError("Failed to fetch item details");
-
-        console.error(err);
-        navigate("/");
+      } finally {
+        setLoading(false);
       }
     };
 
     fetchItemDetails();
   }, [itemid]);
 
-  // State untuk quantity
-  const [quantity, setQuantity] = useState(1);
-
-  // Handler untuk menambah dan mengurangi quantity
-  const handleIncreaseQuantity = () => {
-    setQuantity((prev) => prev + 1);
-  };
-
-  const handleDecreaseQuantity = () => {
-    setQuantity((prev) => Math.max(1, prev - 1));
-  };
-
-  // Handler navigasi dengan cek login
-  const handleNavigate = (path) => {
-    if (isLoggedIn) {
-      navigate(path);
-    } else {
-      alert("Silakan login terlebih dahulu untuk mengakses fitur ini");
-      navigate("/login");
-    }
-  };
-
-  // Fungsi logout
-  const handleLogout = () => {
-    localStorage.removeItem("accountid");
-    setIsLoggedIn(false);
-    setAccountId(null);
-    navigate("/login");
-  };
-
-  console.log("quantity:", quantity);
-
-  // Handler order
-  const handleCreateOrder = async () => {
-    if (!isLoggedIn) {
-      alert("Silakan login terlebih dahulu untuk melakukan order");
-      navigate("/login");
-      return;
-    }
-
-    try {
-      const orderPayload = {
-        itemid: itemData.itemid,
-        sellerid: itemData.sellerid,
-        buyerid: localStorage.getItem("accountid"),
-        quantity: quantity,
-      };
-
-      const response = await axios.post(
-        "http://localhost:8000/order/create",
-        orderPayload
-      );
-
-      if (response.data.success) {
-        alert("Order berhasil dibuat!");
-        console.log("Order Data:", response.data.data);
-        navigate(`/order/${localStorage.getItem("accountid")}`);
-      } else {
-        alert(response.data.message || "Gagal membuat order");
-      }
-    } catch (error) {
-      console.error("Error creating order:", error);
-      alert("Terjadi kesalahan saat membuat order. Silakan coba lagi.");
-    }
-  };
-
   const handleSearch = (e) => {
     e.preventDefault();
     if (searchQuery.trim()) {
-      // Simpan query pencarian di localStorage
       localStorage.setItem("searchQuery", searchQuery);
-      // Navigate ke halaman search
       navigate("/search");
     }
   };
 
   const handleChatSeller = async () => {
     if (!isLoggedIn) {
-      alert("Silakan login terlebih dahulu untuk memulai chat dengan penjual.");
+      alert("Please login to chat with the seller.");
       navigate("/login");
       return;
     }
-
     try {
-      // Kirim permintaan untuk membuat chatroom
       const response = await axios.post("http://localhost:8000/chat/start", {
-        firstAccountId: accountId, // ID akun pembeli
-        secondAccountId: itemData.sellerid, // ID akun penjual
+        firstAccountId: accountId,
+        secondAccountId: itemData.sellerid,
       });
-
+      localStorage.setItem("secondAccountId", itemData.sellerid);
       if (response.data.success) {
-        const chatroomId = response.data.data.chatroomid;
-        console.log("Chatroom created:", chatroomId);
-        localStorage.setItem("firstAccountId", accountId);
-        localStorage.setItem("secondAccountId", itemData.sellerid);
-        // Arahkan ke halaman chat
-        navigate(`/chat/${chatroomId}`);
+        navigate(`/chat/${response.data.data.chatroomid}`);
       } else {
-        alert(response.data.message || "Gagal memulai chat.");
+        alert(response.data.message);
       }
-    } catch (error) {
-      console.error("Error starting chat:", error);
-      alert("Terjadi kesalahan saat memulai chat. Silakan coba lagi.");
+    } catch (err) {
+      alert("Error starting chat.");
     }
   };
 
-  // Error state
-  if (error) {
-    return <div>Error: {error}</div>;
-  }
+  const handleCreateOrder = async () => {
+    if (!isLoggedIn) {
+      alert("Please login to place an order.");
+      navigate("/login");
+      return;
+    }
+    try {
+      const response = await axios.post("http://localhost:8000/order/create", {
+        itemid: itemData.itemid,
+        sellerid: itemData.sellerid,
+        buyerid: accountId,
+        quantity: quantity,
+      });
+      if (response.data.success) {
+        alert("Order placed successfully.");
+      } else {
+        alert(response.data.message);
+      }
+    } catch (err) {
+      alert("Error placing order.");
+    }
+  };
 
-  // Pastikan item tersedia sebelum render
-  if (!itemData) {
-    return <div>Loading....</div>;
-  }
-
-  console.log("Item:", itemData);
+  if (loading) return <div>Loading...</div>;
+  if (error) return <div>Error: {error}</div>;
 
   return (
-    <div className="container">
-      {/* Header dengan navigasi */}
-      <div className="header">
-        <form
-          onSubmit={handleSearch}
-          style={{ width: "100%", display: "flex", alignItems: "center" }}
-        >
+    <div className="updated-item-det-container">
+      <header className="updated-item-det-header">
+        <div className="updated-item-det-logo">LeftOver</div>
+        <form onSubmit={handleSearch} className="updated-item-det-search-bar">
           <input
             type="text"
-            placeholder="What do you want to eat today?"
-            className="search-bar"
+            placeholder="Search for items..."
             value={searchQuery}
             onChange={(e) => setSearchQuery(e.target.value)}
           />
-          <button type="submit" style={{ display: "none" }}>
-            Search
+          <button type="submit">
+            <FaSearch />
           </button>
         </form>
-        <div className="icons">
+        <div className="updated-item-det-icons">
           {isLoggedIn ? (
             <>
-              <button className="icon" onClick={() => handleNavigate("/")}>
-                <FaHouseUser />
-              </button>
-              <button className="icon" onClick={() => handleNavigate(`/order/${localStorage.getItem("accountid")}`)}>
-                <FaShoppingBasket />
-              </button>
-              <button
-                className="icon"
-                onClick={() => Navigate(`/profile/${accountId}`)}
-              >
-                <FaUserCircle />
-              </button>
-              <button className="icon logout" onClick={handleLogout}>
-                <FaSignOutAlt />
-              </button>
+              <FaHouseUser onClick={() => navigate("/")} />
+              <FaShoppingBasket
+                onClick={() => navigate(`/order/${accountId}`)}
+              />
+              <FaUserCircle onClick={() => navigate(`/profile/${accountId}`)} />
+              <FaSignOutAlt
+                onClick={() => {
+                  localStorage.removeItem("accountid");
+                  setIsLoggedIn(false);
+                  navigate("/login");
+                }}
+              />
             </>
           ) : (
-            <button className="icon" onClick={() => navigate("/login")}>
-              <FaSignInAlt />
-            </button>
+            <FaSignInAlt onClick={() => navigate("/login")} />
           )}
         </div>
-      </div>
-
-      {/* Konten detail item */}
-      <div className="content">
-        <div className="location"></div>
-
-        <div className="main">
+      </header>
+      <main className="updated-item-det-content">
+        <div className="updated-item-det-details-section">
           <img
-            src={itemData.imageurl || "https://via.placeholder.com/200"}
-            alt="Product"
-            className="product-image"
+            src={itemData.imageurl || "https://via.placeholder.com/300"}
+            alt="Item"
+            className="updated-item-det-product-image"
           />
-          <div className="details">
+          <div className="updated-item-det-details">
             <h2>{itemData.item_name}</h2>
-            <p className="price">Rp {itemData.price.toLocaleString()}</p>
-            <p>Stock: {itemData.amount}</p>
-
-            <h3>Description</h3>
-            <p>{itemData.description}</p>
-            <p>Expired On: {itemData.expirationdate}</p>
-          </div>
-
-          <div className="purchase">
-            <div className="purchase-box">
-              <div className="quantity-control">
-                <input
-                  type="number"
-                  value={quantity}
-                  min="1"
-                  max={itemData.amount} // Batas maksimum sesuai stok
-                  onChange={(e) => {
-                    const value = parseInt(e.target.value, 10);
-                    setQuantity(isNaN(value) ? 1 : Math.max(1, value)); // Validasi untuk memastikan nilai minimal 1
-                  }}
-                />
-              </div>
-              <div className="sub-total">
-                Subtotal: Rp {(itemData.price * quantity).toLocaleString()}
-              </div>
-              <button
-                className="order-button"
-                onClick={handleCreateOrder}
-                disabled={itemData.amount < quantity || quantity < 1} // Cek stok dan validasi nilai
-              >
-                ORDER
-              </button>
+            <p className="updated-item-det-price">
+              Rp {itemData.price.toLocaleString()}
+            </p>
+            <p>Stock : {itemData.amount}</p>
+            <div className="updated-item-det-description">
+              {itemData.description.split("\n").map((line, index) => (
+                <React.Fragment key={index}>
+                  {line}
+                  <br />
+                </React.Fragment>
+              ))}
             </div>
           </div>
         </div>
-      </div>
-      <div className="contact">
+      </main>
+      <aside className="updated-item-det-order-section">
+        <div className="updated-item-det-quantity">
+          <button onClick={() => setQuantity((prev) => Math.max(1, prev - 1))}>
+            -
+          </button>
+          <input
+            type="integer"
+            min="1"
+            value={quantity}
+            onChange={(e) =>
+              setQuantity(Math.max(1, parseInt(e.target.value) || 1))
+            }
+          />
+          <button onClick={() => setQuantity((prev) => prev + 1)}>+</button>
+        </div>
+        <p className="updated-item-det-total-price">
+          Total: Rp {(itemData.price * quantity).toLocaleString()}
+        </p>
+        <button
+          onClick={handleCreateOrder}
+          className="updated-item-det-order-button"
+        >
+          Order Now
+        </button>
+      </aside>
+      <footer className="updated-item-det-contact">
         <img
-          src={itemData.seller_avatar || "https://via.placeholder.com/50"}
-          alt="User"
-          className="contact-avatar"
+          src={itemData.seller_image || "https://via.placeholder.com/80"}
+          alt="Seller"
+          className="updated-item-det-contact-avatar"
         />
         <div>
-          <p className="contact-name">
-            {itemData.firstname + " " + itemData.surname}
-          </p>
-          <p>Email : {itemData.seller_email}</p>
           <p>
-            Address:{" "}
-            {itemData.seller_address +
-              " " +
-              itemData.district +
-              " " +
-              itemData.seller_city +
-              " " +
-              itemData.seller_country || "penjual belum menambahkan alamat"}
+            {itemData.firstname} {itemData.surname}
           </p>
+          <p>{itemData.seller_email}</p>
+          <p>{itemData.seller_phone}</p>
           <p>
-            Phone :{" "}
-            {itemData.seller_phone || "penjual belum menambahkan nomor telepon"}
+            {itemData.seller_address}, {itemData.district},{" "}
+            {itemData.seller_city}, {itemData.seller_country}
           </p>
         </div>
-        <div className="icons">
-          <div className="icon" onClick={handleChatSeller}>
-            <FaCommentAlt />
-          </div>
+        <div className="updated-item-det-chat-icon" >
+        <FaCommentAlt onClick={handleChatSeller} />
         </div>
-      </div>
+      </footer>
     </div>
   );
 };

@@ -1,4 +1,4 @@
-.order-details-container {
+  .order-details-container {
   width: 100%;
   max-width: 800px;
   margin: 20px auto;
@@ -6,6 +6,35 @@
   background-color: #f9f9f9;
   border-radius: 10px;
   box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+}
+
+.order-details-navbar {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 0.5rem 1rem;
+  background-color: #28a745;
+  border-radius: 8px;
+  margin-bottom: 1.5rem;
+  color: white;
+}
+
+.order-det-back-btn {
+  justify-content: center;
+  align-items: center;
+  padding: 10px 20px;
+  margin-right: 15px;
+  background-color: #007bff;
+  color: white;
+  border: none;
+  border-radius: 5px;
+  font-size: 1rem;
+  cursor: pointer;
+  transition: background-color 0.3s ease;
+}
+
+.order-det-back-btn:hover {
+  background-color: #0056b3;
 }
 
 h1 {

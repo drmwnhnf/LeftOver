@@ -1,246 +1,210 @@
-/* Scrollbar Styles */
-* {
-  scrollbar-width: thin;
-  scrollbar-color: rgba(0,0,0,0.3) transparent;
+.updated-item-det-container {
+  font-family: Arial, sans-serif;
+  background-color: #f8f9fa;
+  padding: 1rem;
+  min-height: 100vh;/* Latar belakang container utama */
 }
 
-*::-webkit-scrollbar {
-  width: 6px;
-  background: transparent;
-}
-
-*::-webkit-scrollbar-thumb {
-  background-color: rgba(0,0,0,0.3);
-  border-radius: 10px;
-  visibility: hidden;
-}
-
-.container:hover *::-webkit-scrollbar-thumb,
-.container *::-webkit-scrollbar-thumb:hover {
-  visibility: visible;
-}
-
-*::-webkit-scrollbar-track {
-  background: transparent;
-}
-
-* {
-    margin: 0;
-    padding: 0;
-    box-sizing: border-box;
-}
-
-/* Base Styles */
-html, body {
-  margin: 0;
-  padding: 0;
-  height: 100%;
-  width: 100%;
-  font-family: 'Inter', Arial, sans-serif;
-  box-sizing: border-box;
-  line-height: 1.5;
-  background: #FFFFFF;
-}
-
-.container {
-  min-width: 100%;
-  margin: 0;
-  /* padding: 20px; */
-  min-height: 100vh;
-}
-
-/* Header Styles */
-.header {
+.updated-item-det-header {
   display: flex;
   justify-content: space-between;
   align-items: center;
-  margin-bottom: 20px;
+  padding: 0.5rem 1rem;
+  background-color: #28a745;
+  border-radius: 8px;
+  color: white;
+  margin-bottom: 1.5rem;
 }
 
-.search-bar {
-  width: 60%;
-  padding: 8px 12px;
-  border-radius: 20px;
+.updated-item-det-logo {
+  font-size: 1.5rem;
+  font-weight: bold;
+  font-style: italic;
+  color: white;
+  margin-right: 1rem;
+}
+
+.updated-item-det-search-bar {
+  display: flex;
+  width: 100%;
+  max-width: 600px;
+}
+
+.updated-item-det-search-bar input {
+  flex: 1;
+  padding: 0.5rem;
+  border: 1px solid #ddd;
+  border-radius: 4px 0 0 4px;
+  outline: none;
+  font-size: 0.9rem;
+}
+
+.updated-item-det-search-bar button {
+  margin-bottom: 10px;
+  padding: 0.5rem 1rem;
   border: none;
-  font-family: 'Inter', sans-serif;
+  border-radius: 0 4px 4px 0;
+  background-color: #006f3e;
+  color: white;
+  cursor: pointer;
+  font-size: 1rem;
 }
 
-.icons {
+.updated-item-det-icons {
   display: flex;
   gap: 15px;
-}
-
-.icon {
   font-size: 20px;
   cursor: pointer;
+  color: white;
 }
 
-.icon:hover {
-  background-color: #ffffff00;
-  transform: scale(1.1);
+.updated-item-det-content {
+  width: auto;
+  margin-top: 20px;
+  background-color: white;
+  border-radius: 10px;
+  padding: 20px;
+  box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
 }
 
-/* Location Styles */
-.location {
-  color: #666;
-  font-size: 14px;
+.updated-item-det-product-image {
+  width: 100%;
+  max-width: 300px;
+  height: auto;
+  border-radius: 10px;
+  margin: 0 auto;
+  display: block;
 }
 
-/* Content Styles */
-.content {
+.updated-item-det-details {
+  text-align: center;
+  margin-top: 20px;
+}
+
+.updated-item-det-details h2 {
+  margin-bottom: 10px;
+  font-size: 24px;
+  color: #333;
+}
+
+.updated-item-det-price {
+  margin-bottom: 15px;
+  font-size: 20px;
+  color: #28a745;
+  font-weight: bold;
+}
+
+.updated-item-det-description {
+  text-align: justify; /* Membuat teks justify */
+  text-align-last: left; /* Untuk memastikan baris terakhir mulai dari kiri */
+  font-size: 1rem;
+  line-height: 1.5;
+  white-space: pre-wrap; /* Membungkus teks jika terlalu panjang */
+  word-wrap: break-word; /* Membungkus kata jika terlalu panjang */
+  margin-top: 20px; /* Tambahan margin atas agar ada spasi */
+}
+
+.updated-item-det-order-section {
+  margin-top: 20px;
+  padding: 20px;
+  background-color: #f1f1f1;
+  border-radius: 10px;
+  box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+}
+
+.updated-item-det-quantity {
+  align-content: center;
+  justify-content: center;
   display: flex;
-  flex-direction: column;
-}
-
-.main {
-  display: flex;
-  margin-right: 20px;
-  gap: 20px;
+  align-items: center;
   margin-bottom: 20px;
 }
 
-.product-image {
-  width: 250px;
-  height: 300px;
-  border-radius: 10px;
-  object-fit: cover;
-  box-shadow: 0 4px 6px rgba(0,0,0,0.1);
-}
-
-.details {
-  flex: 1;
-}
-
-.details h2 {
-  font-size: 20px;
-  color: #333;
-  margin-bottom: 10px;
-}
-
-.details .price {
-  font-size: 24px;
-  font-weight: bold;
-  color: #28a745;
-  margin: 10px 0;
-}
-
-.details ul {
-  padding-left: 20px;
-  margin: 10px 0;
-}
-
-.details li {
-  margin-bottom: 5px;
-}
-
-/* Purchase Styles */
-.purchase {
-  display: flex;
-  width: 250px;
-  height: 300px;
-  justify-content: space-between;
-  align-items: center;
-  flex-direction: column;
-}
-
-.purchase-box {
-  width: 250px;
-  height: 300px;
-  border-radius: 10px;
-  object-fit: cover;
-  box-shadow: 0 4px 6px rgba(0,0,0,0.1);
-  border: 5px solid #ccc;
-  padding: 20px;
-  border-radius: 10px;
-  background-color: white;
-}
-
-.purchase-box > div {
-  display: flex;
-  align-items: space-between;
-  justify-content: center;  
-  padding-top: 50px;
-}
-
-.purchase-box button {
-  justify-content: center;
-  justify-items: center;
-  align-items: center;
-  background-color: #f0f0f0;
+.updated-item-det-quantity button {
+  width: 40px;
+  height: 40px;
   border: none;
-  padding: 5px 10px;
+  background-color: #28a745;
+  color: white;
+  font-size: 20px;
   cursor: pointer;
+  border-radius: 5px;
 }
 
-.purchase-box span {
-  font-size: 18px;
+.updated-item-det-quantity input {
+  width: 60px;
+  text-align: center;
+  margin: 0 10px;
+  border: 1px solid #ccc;
+  border-radius: 5px;
+  font-size: 16px;
 }
 
-.quantity-control {
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  gap: 10px;
-}
-
-.sub-total {
+.updated-item-det-total-price {
+  text-align: center;
   font-size: 18px;
   font-weight: bold;
+  color: #333;
+  margin-bottom: 20px;
 }
 
-.order-button {
+.updated-item-det-order-button {
   width: 100%;
-  padding: 10px;
+  padding: 12px;
   background-color: #28a745;
   color: white;
   border: none;
   border-radius: 5px;
   cursor: pointer;
-  transition: background-color 0.3s;
+  text-align: center;
+  font-size: 16px;
 }
 
-.order-button:hover {
+.updated-item-det-order-button:hover {
   background-color: #218838;
 }
 
-/* Contact Styles */
-.contact {
+.updated-item-det-contact {
   display: flex;
-  position: flex;
-  margin-left: 20px;
-  margin-right: 40px;
-  align-items: center;
-  padding: 10px;
-  background-color: #e0f7e9;
+  align-items: center; /* Menyelaraskan elemen secara vertikal */
+  justify-content: flex-start; /* Elemen lain diatur dari kiri ke kanan */
+  margin-top: 20px;
+  padding: 15px;
+  background-color: #e8f5e9; /* Warna hijau lembut */
   border-radius: 10px;
+  position: relative; /* Untuk memastikan ikon dapat dipindahkan dengan margin */
 }
 
-.contact-avatar {
-  width: 100px;
-  height: 100px;
+.updated-item-det-contact-avatar {
+  width: 50px;
+  height: 50px;
   border-radius: 50%;
-  margin-right: 15px;
   object-fit: cover;
 }
 
-.contact-name {
-  font-weight: bold;
-  margin-bottom: 5px;
+.updated-item-det-contact div {
+  flex: 1;
+  margin-left: 10px;
+  gap: 5px;
 }
 
-/* Responsive Design */
-@media (max-width: 1280px) {
-  .main {
-    flex-direction: row;
-    align-items: center;
-  }
+.updated-item-det-contact p {
+  margin: 5px;
+  font-size: 14px;
+  color: #333;
+}
 
-  .product-image {
-    width: 100%;
-    max-width: 300px;
-  }
+.updated-item-det-contact svg {
+  font-size: 24px;
+  color: #28a745;
+  cursor: pointer;
+}
 
-  .search-bar {
-    width: 100%;
-  }
+.updated-item-det-chat-icon {
+  position: absolute; /* Pindahkan ikon ke posisi absolut */
+  right: 15px; /* Tempatkan ikon 15px dari tepi kanan */
+  font-size: 24px;
+  color: #28a745;
+  cursor: pointer;
+  margin-right:50px;
 }
