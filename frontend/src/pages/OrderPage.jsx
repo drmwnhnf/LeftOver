@@ -1,5 +1,6 @@
 import React, { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
+import { apiOrder } from "../api";
 import {
   FaRocketchat,
   FaUserCircle,
@@ -18,7 +19,6 @@ const OrderPage = () => {
   const [searchQuery, setSearchQuery] = useState("");
   const [isLoggedIn, setIsLoggedIn] = useState(false);
   const [accountId, setAccountId] = useState(null);
-
   const [currentPage, setCurrentPage] = useState(1);
   const [itemsPerPage] = useState(10);
 
@@ -40,7 +40,7 @@ const OrderPage = () => {
   const fetchOrders = async () => {
     try {
       const response = await fetch(
-        `http://localhost:8000/order/out/${accountId}`
+        `${apiOrder}/out/${accountId}`
       );
       const data = await response.json();
       if (data.success) {
@@ -80,7 +80,6 @@ const OrderPage = () => {
 
   return (
     <div className="orderpage-container">
-      {/* Navbar */}
       <div className="orderpage-navbar">
         <div className="navbar-logo">Order History</div>
         <form onSubmit={handleSearch} className="search-bar">

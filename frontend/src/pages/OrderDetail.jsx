@@ -3,6 +3,7 @@ import axios from "axios";
 import { useParams, useNavigate } from "react-router-dom";
 import "./OrderDetail.css";
 import { FaArrowLeft } from "react-icons/fa";
+import { apiItem, apiOrder } from "../api";
 
 const OrderDetail = () => {
   const { orderId } = useParams();
@@ -31,7 +32,7 @@ const OrderDetail = () => {
     const fetchOrderDetails = async () => {
       try {
         const orderResponse = await axios.get(
-          `http://localhost:8000/order/id/${orderId}`
+          `${apiOrder}/id/${orderId}`
         );
         if (orderResponse.data.success) {
           const order = orderResponse.data.data;
@@ -40,7 +41,7 @@ const OrderDetail = () => {
 
           // Fetch item details
           const itemResponse = await axios.get(
-            `http://localhost:8000/item/${order.itemid}`
+            `${apiItem}/${order.itemid}`
           );
           if (itemResponse.data.success) {
             setItemData(itemResponse.data.data);
@@ -63,7 +64,7 @@ const OrderDetail = () => {
   const handleCancelOrder = async () => {
     try {
       const response = await axios.put(
-        `http://localhost:8000/order/cancel/${orderId}`
+        `${apiOrder}/cancel/${orderId}`
       );
       if (response.data.success) {
         alert("Order canceled successfully.");
@@ -80,7 +81,7 @@ const OrderDetail = () => {
   const handleAcceptOrder = async () => {
     try {
       const response = await axios.put(
-        `http://localhost:8000/order/accept/${orderId}`
+        `${apiOrder}/accept/${orderId}`
       );
       if (response.data.success) {
         alert("Order accepted successfully.");
@@ -102,7 +103,7 @@ const OrderDetail = () => {
 
     try {
       const response = await axios.put(
-        `http://localhost:8000/order/finish/${orderId}`,
+        `${apiOrder}/finish/${orderId}`,
         {
           orderCode: orderCodeInput,
         }

@@ -1,5 +1,6 @@
 import React, { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
+import { apiItem } from "../api";
 import {
   FaRocketchat,
   FaUserCircle,
@@ -42,7 +43,7 @@ const HomePage = () => {
 
   const fetchItems = async () => {
     try {
-      const response = await fetch("http://localhost:8000/item/");
+      const response = await fetch(`${apiItem}/`);
       const data = await response.json();
       if (data.success) {
         setAllItems(data.data);

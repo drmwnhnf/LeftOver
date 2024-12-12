@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from "react";
 import { useParams } from "react-router-dom";
+import { apiChat, apiAccount } from "../api";
 import "./Chat.css";
 
 function Chat() {
@@ -13,7 +14,7 @@ function Chat() {
     // Fetch data chatroom untuk mendapatkan nama lawan bicara
     const fetchChatPartnerName = async () => {
       try {
-        const res = await fetch(`http://localhost:8000/chat/u/${senderId}`);
+        const res = await fetch(`${apiChat}/u/${senderId}`);
         const data = await res.json();
         if (data.success) {
           // Cari chatroom yang cocok
@@ -29,7 +30,7 @@ function Chat() {
 
             // Ambil nama lawan bicara
             const userRes = await fetch(
-              `http://localhost:8000/account/${chatPartnerId}`
+              `${apiAccount}/${chatPartnerId}`
             );
             const userData = await userRes.json();
             if (userData.success) {
@@ -54,7 +55,7 @@ function Chat() {
     // Fetch awal data chat
     const fetchChats = async () => {
       try {
-        const res = await fetch(`http://localhost:8000/chat/r/${chatroomId}`);
+        const res = await fetch(`${apiChat}/r/${chatroomId}`);
         const data = await res.json();
         if (data.success) {
           setChatBubbles(data.data);
@@ -79,7 +80,7 @@ function Chat() {
 
     try {
       const response = await fetch(
-        `http://localhost:8000/chat/w/${chatroomId}`,
+        `${apiChat}/w/${chatroomId}`,
         {
           method: "POST",
           headers: { "Content-Type": "application/json" },

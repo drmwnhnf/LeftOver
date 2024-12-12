@@ -8,6 +8,7 @@ import {
   FaSignInAlt,
   FaSearch,
 } from "react-icons/fa";
+import { apiItem } from "../api";
 import "./SearchPage.css";
 
 const categories = [
@@ -67,7 +68,7 @@ const SearchPage = () => {
   const fetchItems = async () => {
     setIsLoading(true);
     try {
-      const response = await fetch("http://localhost:8000/item/search", {
+      const response = await fetch(`${apiItem}/search`, {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({
@@ -162,14 +163,13 @@ const SearchPage = () => {
 
   return (
     <div className="searchpage-container">
-      {/* Navbar */}
       <div className="searchpage-navbar">
         <span className="navbar-logo">LeftOver</span>
         <div className="search-bar">
           <input
             type="text"
             className="search-input-field"
-            placeholder="Search for items..."
+            placeholder="What do you want to eat?"
             value={searchQuery}
             onChange={(e) => setSearchQuery(e.target.value)}
           />

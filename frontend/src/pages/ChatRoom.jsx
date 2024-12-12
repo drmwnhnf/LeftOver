@@ -1,5 +1,6 @@
 import React, { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
+import { apiChat, apiAccount } from "../api";
 import "./ChatRoom.css";
 
 const ChatRoom = () => {
@@ -10,7 +11,7 @@ const ChatRoom = () => {
 
   useEffect(() => {
     // Ambil daftar chatroom
-    fetch(`http://localhost:8000/chat/u/${firstId}`)
+  fetch(`${apiChat}/u/${firstId}`)
       .then((res) => res.json())
       .then(async (data) => {
         if (data.success) {
@@ -39,7 +40,7 @@ const ChatRoom = () => {
     const namesMap = {};
     for (const id of userIds) {
       try {
-        const response = await fetch(`http://localhost:8000/account/${id}`);
+        const response = await fetch(`${apiAccount}/${id}`);
         if (response.ok) {
           const data = await response.json();
           if (data.success) {

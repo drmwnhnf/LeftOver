@@ -1,7 +1,8 @@
 import React, { useState, useEffect } from "react";
 import axios from "axios";
 import { useNavigate } from "react-router-dom";
-import { FaPlus, FaTrash, FaEdit, FaBackward, FaArrowAltCircleLeft } from "react-icons/fa";
+import { FaPlus, FaTrash, FaEdit, FaArrowAltCircleLeft } from "react-icons/fa";
+import { apiItem } from "../api";
 import "./SellerItem.css";
 
 const SellerItem = () => {
@@ -82,7 +83,7 @@ const SellerItem = () => {
     setIsLoading(true);
     try {
       const response = await axios.get(
-        `http://localhost:8000/item/seller/${accountId}`
+        `${apiItem}/seller/${accountId}`
       );
       if (response.data.success) {
         setItems(response.data.data);
@@ -107,7 +108,7 @@ const SellerItem = () => {
   const handleAddItemSubmit = async (e) => {
     e.preventDefault();
     try {
-      const response = await axios.post("http://localhost:8000/item/create", {
+      const response = await axios.post(`${apiItem}/create`, {
         ...newItem,
         sellerid: accountId,
       });
@@ -131,7 +132,7 @@ const SellerItem = () => {
     if (confirm) {
       try {
         const response = await axios.delete(
-          `http://localhost:8000/item/delete/${itemId}`
+          `${apiItem}/delete/${itemId}`
         );
         if (response.data.success) {
           alert("Item deleted successfully!");
@@ -313,7 +314,7 @@ const SellerItem = () => {
     e.preventDefault();
     try {
       const response = await axios.put(
-        `http://localhost:8000/item/edit/${editItem.itemid}`,
+        `${apiItem}/edit/${editItem.itemid}`,
         editItem
       );
       if (response.data.success) {

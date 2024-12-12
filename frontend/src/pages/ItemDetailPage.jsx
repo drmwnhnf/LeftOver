@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from "react";
 import axios from "axios";
 import { useParams, useNavigate } from "react-router-dom";
+import { apiItem, apiChat, apiOrder } from "../api";
 import {
   FaRocketchat,
   FaUserCircle,
@@ -54,7 +55,7 @@ const ItemDetailPage = () => {
     const fetchItemDetails = async () => {
       try {
         const response = await axios.get(
-          `http://localhost:8000/item/${itemid}`
+          `${apiItem}/${itemid}`
         );
         if (response.data.success) {
           setItemData(response.data.data);
@@ -86,7 +87,7 @@ const ItemDetailPage = () => {
       return;
     }
     try {
-      const response = await axios.post("http://localhost:8000/chat/start", {
+      const response = await axios.post(`${apiChat}/start`, {
         firstAccountId: accountId,
         secondAccountId: itemData.sellerid,
       });
@@ -108,7 +109,7 @@ const ItemDetailPage = () => {
       return;
     }
     try {
-      const response = await axios.post("http://localhost:8000/order/create", {
+      const response = await axios.post(`${apiOrder}/create`, {
         itemid: itemData.itemid,
         sellerid: itemData.sellerid,
         buyerid: accountId,

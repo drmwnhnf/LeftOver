@@ -82,14 +82,21 @@
 }
 
 ::-webkit-scrollbar {
-  width: 8px;
+  width: 12px; /* Lebar scrollbar */
+}
+
+::-webkit-scrollbar-track {
+  background: transparent; /* Hilangkan background scrollbar */
 }
 
 ::-webkit-scrollbar-thumb {
-  background: rgba(40, 167, 69, 0.5);
-  border-radius: 8px;
+  background-color: #28a745; /* Warna bagian yang bisa digeser */
+  border-radius: 20px;
+  border: 3px solid transparent; /* Berikan padding agar terlihat lebih estetis */
 }
 
-::-webkit-scrollbar-thumb:hover {
-  background: rgba(40, 167, 69, 0.8);
+/* Untuk Firefox */
+* {
+  scrollbar-width: thin; /* Ukuran scrollbar lebih kecil */
+  scrollbar-color: #28a745 transparent; /* Warna bagian scrollbar dan latar belakang */
 }

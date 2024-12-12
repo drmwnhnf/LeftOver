@@ -1,7 +1,8 @@
 import React, { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import axios from "axios";
-import { FaEye, FaEyeSlash } from "react-icons/fa"; // Import icon mata
+import { FaEye, FaEyeSlash } from "react-icons/fa";
+import { apiAccount } from "../api";
 import "./EditCredential.css";
 
 const EditCredentialPage = () => {
@@ -57,7 +58,7 @@ const EditCredentialPage = () => {
     e.preventDefault();
     try {
       const response = await axios.put(
-        "http://localhost:8000/account/edit/credentials",
+        `${apiAccount}/edit/credentials`,
         formData
       );
       setResponseMessage(response.data.message);

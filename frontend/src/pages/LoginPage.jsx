@@ -2,7 +2,8 @@ import React, { useState, useEffect } from "react";
 import "./BasePage.css"; // Shared styles for login and register pages
 import { Link, useNavigate } from "react-router-dom";
 import axios from "axios";
-import { FaUserAlt, FaLock, FaMailBulk, FaEnvelope } from "react-icons/fa";
+import { FaLock, FaEnvelope } from "react-icons/fa";
+import { apiAccount } from "../api";
 
 // Fungsi untuk menyimpan data dengan waktu kedaluwarsa
 function setItemWithExpiry(key, value, expiryInMinutes) {
@@ -54,7 +55,7 @@ const LoginPage = () => {
   const handleLogin = async (e) => {
     e.preventDefault();
     try {
-      const response = await axios.post("http://localhost:8000/account/login", {
+      const response = await axios.post(`${apiAccount}/login`, {
         email,
         password,
       });
@@ -66,7 +67,7 @@ const LoginPage = () => {
         navigate("/"); // Arahkan ke halaman utama setelah login
       } else if (data) {
         // Jika verifikasi diperlukan
-        await axios.post("http://localhost:8000/account/verification/request", {
+        await axios.post(`${apiAccount}/verification/request`, {
           accountId: data,
         });
         localStorage.setItem("verifid", data); // Simpan sementara

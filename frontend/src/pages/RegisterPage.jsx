@@ -3,6 +3,7 @@ import "./AuthPage.css";
 import { useNavigate } from "react-router-dom";
 import axios from "axios";
 import { Link } from "react-router-dom";
+import { apiAccount } from "../api";
 import { FaUserAlt, FaLock, FaEnvelope } from "react-icons/fa";
 
 const RegisterPage = () => {
@@ -37,7 +38,7 @@ const RegisterPage = () => {
 
       // Step 1: Kirim data ke endpoint register
       const registerResponse = await axios.post(
-        "http://localhost:8000/account/register",
+        `${apiAccount}/register`,
         payload
       );
 
@@ -54,7 +55,7 @@ const RegisterPage = () => {
 
       // Step 2: Kirim permintaan verifikasi
       await axios.post(
-        "http://localhost:8000/account/verification/request", 
+        `${apiAccount}/verification/request`, 
         { accountId: data }
       );
 

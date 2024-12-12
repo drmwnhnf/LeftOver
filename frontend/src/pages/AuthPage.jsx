@@ -1,6 +1,7 @@
 import React, { useState } from "react";
 import "./AuthPage.css";
 import { useNavigate } from "react-router-dom";
+import { apiAccount } from "../api";
 
 const VerifyPage = () => {
   const [verificationCode, setVerificationCode] = useState("");
@@ -18,7 +19,7 @@ const VerifyPage = () => {
   const handleVerify = async () => {
     try {
       const response = await fetch(
-        `http://localhost:8000/account/verification/${accountId}`,
+        `${apiAccount}/verification/${accountId}`,
         {
           method: "POST",
           headers: {
@@ -41,7 +42,7 @@ const VerifyPage = () => {
       } else {
         // Jika gagal, minta ulang kode verifikasi
         const retryResponse = await fetch(
-          `http://localhost:8000/account/verification/request`,
+          `${apiAccount}/verification/request`,
           {
             method: "POST",
             headers: {

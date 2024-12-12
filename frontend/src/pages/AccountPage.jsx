@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from "react";
 import axios from "axios";
+import { apiAccount, apiOrder } from "../api"
 import { useNavigate } from "react-router-dom";
 import {
   FaEdit,
@@ -15,6 +16,7 @@ import "./AccountPage.css";
 
 const AccountPage = () => {
   const navigate = useNavigate();
+  // const accApi = apiAccount;
   const [userProfile, setUserProfile] = useState(null);
   const [orderHistory, setOrderHistory] = useState([]);
   const [activeTab, setActiveTab] = useState("buy");
@@ -250,7 +252,7 @@ const AccountPage = () => {
   const fetchUserProfile = async () => {
     try {
       const response = await axios.get(
-        `http://localhost:8000/account/${accountId}`
+        `${apiAccount}/${accountId}`
       );
       if (response.data.success) {
         const profile = response.data.data;
@@ -280,8 +282,8 @@ const AccountPage = () => {
     try {
       const endpoint =
         activeTab === "buy"
-          ? `http://localhost:8000/order/out/${accountId}` // Endpoint untuk order made
-          : `http://localhost:8000/order/in/${accountId}`; // Endpoint untuk incoming order
+          ? `${apiOrder}/out/${accountId}` // Endpoint untuk order made
+          : `${apiOrder}/in/${accountId}`; // Endpoint untuk incoming order
       const response = await axios.get(endpoint);
       if (response.data.success) {
         setOrderHistory(response.data.data || []); // Set array kosong jika tidak ada data
@@ -314,7 +316,7 @@ const AccountPage = () => {
   const handleEditSubmit = async (e) => {
     e.preventDefault();
     try {
-      const response = await axios.put("http://localhost:8000/account/edit", {
+      const response = await axios.put(`${apiAccount}/edit`, {
         ...editForm,
         accountid: accountId,
       });
@@ -338,7 +340,7 @@ const AccountPage = () => {
     if (confirm) {
       try {
         const response = await axios.delete(
-          "http://localhost:8000/account/delete",
+          `${apiAccount}/delete`,
           {
             data: { accountId },
           }
