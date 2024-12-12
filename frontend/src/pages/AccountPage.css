@@ -120,7 +120,7 @@ body {
 }
 
 .account-btn-edit,
-.account-btn-delete {
+.account-btn-delete, .account-btn-credential {
   display: inline-flex;
   align-items: center;
   justify-content: center;
@@ -152,6 +152,31 @@ body {
 .account-btn-delete:hover {
   background-color: #e63946;
 }
+
+.account-btn-credential {
+  background-color: #17a2b8;
+  color: white;
+  gap: 5px;
+}
+
+.account-btn-credential:hover {
+  background-color: #138496;
+}
+
+/* .account-btn-credential {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  padding: 10px 15px;
+  margin: 10px 5px 0 5px;
+  border: none;
+  border-radius: 5px;
+  font-size: 0.9rem;
+  cursor: pointer;
+  background-color: #17a2b8; 
+  color: white;
+  transition: background-color 0.2s ease;
+} */
 
 .account-order-container {
   display: flex;

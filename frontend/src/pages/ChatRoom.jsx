@@ -28,6 +28,9 @@ const ChatRoom = () => {
           const names = await fetchUserNames(uniqueIds);
           setUserNames(names);
         }
+      })
+      .catch((error) => {
+        console.error("Error fetching chatrooms:", error);
       });
   }, []);
 
@@ -37,38 +40,34 @@ const ChatRoom = () => {
     for (const id of userIds) {
       try {
         const response = await fetch(`http://localhost:8000/account/${id}`);
-        const data = await response.json();
-        if (data.success) {
-          const { firstname, surname } = data.data;
-          namesMap[id] = `${firstname} ${surname}`; // Gabungkan firstName dan surname
+        if (response.ok) {
+          const data = await response.json();
+          if (data.success) {
+            const { firstname, surname } = data.data;
+            namesMap[id] = `${firstname} ${surname}`;
+          } else {
+            namesMap[id] = "Unknown User";
+          }
         } else {
           namesMap[id] = "Unknown User";
         }
       } catch (error) {
+        console.error(`Error fetching user for ID ${id}:`, error);
         namesMap[id] = "Unknown User";
-        console.error(`Error fetching name for user ID ${id}:`, error);
       }
     }
     return namesMap;
   };
 
   const handleChatRoomClick = (chatroomId) => {
-    fetch(`http://localhost:8000/chat/r/${chatroomId}`)
-      .then((res) => res.json())
-      .then((data) => {
-        if (data.success) {
-          localStorage.setItem("chatBubbles", JSON.stringify(data.data)); // Simpan bubble chat di localStorage
-          navigate(`/chat/${chatroomId}`); // Navigasi ke halaman Chat
-          console.log("Your Data :", data.data); // Debug log
-        }
-      });
+    navigate(`/chat/${chatroomId}`); // Navigasi ke halaman Chat
   };
 
   return (
     <div className="chatroom-container">
       <div className="chatroom-header">
         <h2>Chat Rooms</h2>
-        <button className="home-button" onClick={() => navigate("/")}>
+        <button className="chatroom-home-button" onClick={() => navigate("/")}>
           Home
         </button>
       </div>

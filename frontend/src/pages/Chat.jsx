@@ -6,7 +6,49 @@ function Chat() {
   const { chatroomId } = useParams();
   const [chatBubbles, setChatBubbles] = useState([]);
   const [newMessage, setNewMessage] = useState("");
+  const [chatPartnerName, setChatPartnerName] = useState("Loading...");
   const senderId = localStorage.getItem("firstAccountId");
+
+  useEffect(() => {
+    // Fetch data chatroom untuk mendapatkan nama lawan bicara
+    const fetchChatPartnerName = async () => {
+      try {
+        const res = await fetch(`http://localhost:8000/chat/u/${senderId}`);
+        const data = await res.json();
+        if (data.success) {
+          // Cari chatroom yang cocok
+          const chatroom = data.data.find(
+            (room) => room.chatroomid === chatroomId
+          );
+
+          if (chatroom) {
+            const chatPartnerId =
+              chatroom.firstaccountid === senderId
+                ? chatroom.secondaccountid
+                : chatroom.firstaccountid;
+
+            // Ambil nama lawan bicara
+            const userRes = await fetch(
+              `http://localhost:8000/account/${chatPartnerId}`
+            );
+            const userData = await userRes.json();
+            if (userData.success) {
+              setChatPartnerName(
+                `${userData.data.firstname} ${userData.data.surname}`
+              );
+            } else {
+              setChatPartnerName("Unknown User");
+            }
+          }
+        }
+      } catch (error) {
+        console.error("Error fetching chat partner name:", error);
+        setChatPartnerName("Unknown User");
+      }
+    };
+
+    fetchChatPartnerName();
+  }, [chatroomId, senderId]);
 
   useEffect(() => {
     // Fetch awal data chat
@@ -63,10 +105,8 @@ function Chat() {
 
   // Fungsi untuk memformat waktu ke format Indonesia tanpa detik
   const formatTime = (timestamp) => {
-    const date = new Date(timestamp); // Buat objek Date dari timestamp
-    const localTime = new Date(date.getTime() + 7 * 60 * 60 * 1000); // Tambahkan 7 jam (offset untuk WIB)
-
-    return localTime.toLocaleTimeString("id-ID", {
+    const date = new Date(timestamp);
+    return date.toLocaleTimeString("id-ID", {
       hour: "2-digit",
       minute: "2-digit",
     });
@@ -75,8 +115,11 @@ function Chat() {
   return (
     <div className="chat-container">
       <div className="chat-header">
-        <h2>Chat</h2>
-        <button className="back-button" onClick={() => window.history.back()}>
+        <h2>{chatPartnerName}</h2>
+        <button
+          className="chat-back-button"
+          onClick={() => window.history.back()}
+        >
           Back
         </button>
       </div>

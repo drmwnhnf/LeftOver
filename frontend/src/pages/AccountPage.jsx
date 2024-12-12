@@ -9,6 +9,7 @@ import {
   FaSignOutAlt,
   FaSignInAlt,
   FaSearch,
+  FaUserEdit,
 } from "react-icons/fa";
 import "./AccountPage.css";
 
@@ -626,14 +627,19 @@ const AccountPage = () => {
               className="account-btn-edit"
               onClick={() => setIsEditModalOpen(true)}
             >
-              Edit Profile
-              <FaEdit />
+              <FaEdit /> Edit Profile
             </button>
             <button
               className="account-btn-delete"
               onClick={handleDeleteAccount}
             >
               <FaTrash /> Delete Account
+            </button>
+            <button
+              className="account-btn-credential"
+              onClick={() => navigate("/profile/edit/credential")}
+            >
+              <FaUserEdit /> Edit Credentials
             </button>
           </div>
         )}
@@ -687,9 +693,7 @@ const AccountPage = () => {
                   <div className="account-total-price">
                     Rp {order.totalprice.toLocaleString()}
                   </div>
-                  <div
-                    className={`account-status ${order.status}`}
-                  >
+                  <div className={`account-status ${order.status}`}>
                     {order.status}
                   </div>
                 </div>

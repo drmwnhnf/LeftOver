@@ -4,6 +4,7 @@ import LoginPage from "./pages/LoginPage";
 import RegisterPage from "./pages/RegisterPage";
 import HomePage from "./pages/HomePage";
 import AccountPage from "./pages/AccountPage";
+import EditCredentialPage from "./pages/EditCredentialPage";
 import SearchPage from "./pages/SearchPage";
 import AuthPage from "./pages/AuthPage";
 import ItemDetailPage from "./pages/ItemDetailPage";
@@ -23,6 +24,7 @@ const App = () => (
       <Route path="/chat" element={<ChatRoom />} />
       <Route path="/chat/:chatroomId" element={<Chat />} />
       <Route path="/profile/:accountid" element={<AccountPage />} />
+      <Route path="/profile/edit/credential" element={<EditCredentialPage />} />
       <Route path="/search" element={<SearchPage />} />
       <Route path="/item/:itemid" element={<ItemDetailPage />} />
       <Route path="/order/:accountid" element={<OrderPage />} />
