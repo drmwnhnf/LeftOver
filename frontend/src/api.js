@@ -1,4 +1,4 @@
-const BASE_URL = "http://localhost:8000";
+const BASE_URL = "https://backend-one-iota-97.vercel.app";
 
 // Define base paths for each controller
 export const apiAccount = `${BASE_URL}/account`;

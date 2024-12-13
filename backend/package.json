@@ -5,9 +5,7 @@
   "main": "index.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
-    "start": "node index.js",
-    "dev": "nodemon index.js"
-
+    "start": "node index.js"
   },
   "author": "Darmawan Hanif",
   "license": "MIT",
@@ -21,6 +19,7 @@
     "morgan": "^1.10.0",
     "nodemailer": "^6.9.16",
     "pg": "^8.13.0",
+    "serverless-http": "^3.2.0",
     "winston": "^3.15.0"
   },
   "devDependencies": {
