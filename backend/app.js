@@ -27,7 +27,7 @@ app.use('/review', reviewRoute);
 app.use('/chat', chatRoute);
 
 app.get('/', (req, res) => {
-    res.send("Backend Working!");
+    return res.status(200).send("Backend Working!");
 });
 
 databaseConnectionTest();
