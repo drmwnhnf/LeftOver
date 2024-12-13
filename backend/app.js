@@ -26,6 +26,10 @@ app.use('/order', orderRoute);
 app.use('/review', reviewRoute);
 app.use('/chat', chatRoute);
 
+app.get('/', (req, res) => {
+    res.send("Backend Working!");
+});
+
 databaseConnectionTest();
 
 app.listen(8000, () => {
